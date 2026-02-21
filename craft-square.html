@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chester | CRAFT^2</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="nav-shell">
+        <span class="brand">Chester(Zhaohan) Pan</span>
+        <nav aria-label="Primary">
+          <ul class="nav-list">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./publication.html">Publication</a></li>
+            <li><a href="./misc.html">Misc</a></li>
+            <li><a href="./craft-square.html" aria-current="page">CRAFT^2</a></li>
+            <li><a href="./gallery.html">Gallery</a></li>
+            <li><a href="./about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Intro">
+        <video
+          class="hero-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          poster="./assets/research/karp/karp-1.webp"
+        >
+          <!-- 保留封面图，视频可后续补充 -->
+        </video>
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="container hero-content">
+          <p class="hero-text">
+            <strong>Crafting</strong> Human-Computer Interaction artifacts and experiences through <strong>Computation · Research · Art · Fabrication · Tutoring</strong>.
+          </p>
+        </div>
+      </section>
+
+      <section class="craft2-content" aria-label="Content">
+        <div class="container">
+          <h2 class="content-title">CRAFT^2 Dummy Content</h2>
+          <p class="craft2-text">
+            Dummy content to demonstrate the shared content block system on CRAFT^2 page.
+          </p>
+
+          <hr class="content-divider" />
+
+          <div class="content-duo" style="--content-direction: column; --content-gap: 24px; --content-img-align: start; --content-text-align: start; --content-img-size: 100%;">
+            <div class="content-img-wrap">
+              <img class="content-img" src="./assets/pub/karp-tn.jpg" alt="Example" loading="lazy" />
+            </div>
+            <p class="content-text">
+              <strong>图上文下，图与文都 start 对齐</strong>
+            </p>
+          </div>
+
+          <hr class="content-divider" />
+
+          <div class="content-duo" style="--content-direction: column-reverse; --content-gap: 40px; --content-img-align: end; --content-text-align: end; --content-img-size: 280px;">
+            <p class="content-text">
+              <strong>图下文上，图与文都 end 对齐</strong>
+            </p>
+            <div class="content-img-wrap">
+              <img class="content-img" src="./assets/pub/karp-tn.jpg" alt="Example" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">   
+        <small>Chester(Zhaohan) Pan & CRAFT Square © 2024 - 2026. All Rights Reserved.</small>
+      </div>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

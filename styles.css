@@ -1,0 +1,1258 @@
+/* =======================================================================
+   styles.css — reorganized to match your site structure
+   - Goal: make navigation easy by mirroring your HTML / page IA.
+   - Content block: 全部由 HTML 上的 CSS Custom Properties 控制，见下方注释。
+   - Tip: search by the tree comments (e.g., "publication > pub-item").
+   ======================================================================= */
+
+/* =======================================================================
+   Web General
+   ======================================================================= */
+
+/* web general
+- typography (fonts)
+*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&display=swap");
+
+/* web general
+- reset + base
+*/
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body{
+  font-family: "Inter","Helvetica Neue","SF Pro Text",Arial,sans-serif;
+  background: #fff;
+  color: #101010;
+
+  /* sticky footer layout */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main{ flex: 1 0 auto; }
+
+a{ color: inherit; text-decoration: none; }
+
+/* web general
+- layout helpers
+*/
+.container{
+  width: min(1000px, 100% - 48px);
+  margin: 0 auto;
+}
+
+/* =======================================================================
+   Content — 公用内容块 (全部由 HTML 上的 CSS Custom Properties 控制)
+   .content-duo 图文 | .content-media 纯图 | .content-prose 纯文 | .content-code 代码/BibTeX
+   =======================================================================
+   .content-duo: --content-direction, --content-gap, --content-img-align, --content-text-align (start|center|end), --content-img-size, --content-img-radius
+   .content-media: --content-img-align, --content-img-size, --content-img-radius
+   .content-prose: --content-text-align (start|center|end 文字左右对齐), --content-text-size
+   .content-code: --content-code-width, --content-code-min-height (可调长宽)
+   ======================================================================= */
+
+/* content - divider */
+.content-divider{
+  border: 0;
+  border-top: 1px solid rgba(0,0,0,0.18);
+  margin: 40px 0;
+}
+
+/* content - section title (section-title 为兼容别名) */
+.content-title,
+.section-title{
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  text-align: center;
+}
+
+/* ---------- content-duo：图文组合，有 gap ---------- */
+.content-duo{
+  display: flex;
+  flex-direction: var(--content-direction, row);
+  gap: var(--content-gap, 24px);
+  min-height: 0;
+  align-items: stretch;
+}
+
+/* ---------- content-media：纯图，无 gap ---------- */
+.content-media{
+  display: flex;
+  min-height: 0;
+  align-items: stretch;
+  /* 用 --content-img-align 控制图片在水平方向 start|center|end */
+  justify-content: var(--content-img-align, start);
+}
+.content-media .content-img-wrap{
+  flex: 0 0 auto;
+}
+
+/* ---------- content-prose：无 gap；--content-text-align 控制文本框在宽度方向的位置 start|center|end ---------- */
+.content-prose{
+  display: flex;
+  min-height: 0;
+  align-items: stretch;
+  justify-content: var(--content-text-align, start);
+}
+.content-prose .content-text{
+  flex: 0 1 auto;
+  max-width: var(--content-text-size, 100%);
+}
+.content-prose .content-text + .content-text{ margin-top: 1em; }
+
+/* 图容器与图：整张显示、用图片自身比例，--content-img-size 控制大小，--content-img-radius 圆角（duo / media 共用） */
+.content-img-wrap{
+  flex: 0 0 auto;
+  max-width: var(--content-img-size, 100%);
+  min-width: 0;
+  min-height: 0;
+  align-self: var(--content-img-align, start);
+  overflow: hidden;
+  border-radius: var(--content-img-radius, 0);
+}
+.content-img{
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  max-width: 100%;
+  border-radius: var(--content-img-radius, 0);
+}
+
+/* 文：duo / prose 共用；--content-text-align 控制文本框在另一方向的位置 start|center|end */
+.content-text{
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.8;
+  color: #1f1f1f;
+  align-self: var(--content-text-align, start);
+}
+
+/* ---------- content-code：代码/BibTeX 展示，居中、灰色长方形背景 ---------- */
+.content-code{
+  width: var(--content-code-width, 90%);
+  max-width: 800px;
+  min-height: var(--content-code-min-height, 120px);
+  margin: 0 auto;
+  padding: 20px 24px;
+  background: #e8e8e8;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.content-code-body{
+  margin: 0;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1f1f1f;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* -----------------------------------------------------------------------
+   web general
+   - 抬头
+     - brand
+     - navi tab
+   ----------------------------------------------------------------------- */
+.site-header{
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 100;
+
+  background: #000;
+  border-bottom: 2px solid #000;
+  color: #fff;
+}
+
+/* header inner shell */
+.nav-shell{
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 50px;
+}
+
+/* - brand */
+.brand{
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* - navi tab */
+.nav-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0;
+  width: auto;
+}
+
+.nav-list li{
+  display: flex;
+  align-items: center;
+}
+
+.nav-list a{
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+  opacity: 0.95;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* navi separator */
+.nav-list li + li::before{
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1.5em;
+  margin: 0 20px;
+  background: currentColor;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* current page state */
+.nav-list a[aria-current="page"]{
+  opacity: 1;
+  font-weight: 700;
+}
+
+/* -----------------------------------------------------------------------
+   web general
+   - 背景 (global page background is handled by body)
+   ----------------------------------------------------------------------- */
+/* (no extra selector needed) */
+
+/* -----------------------------------------------------------------------
+   web general
+   - hero
+     - hero assets
+     - hero text
+   ----------------------------------------------------------------------- */
+.hero{
+  position: relative;
+  height: 55vh;
+  overflow: hidden;
+
+  background: #000;
+  color: #fff;
+
+  /* push below fixed header */
+  margin-top: 70px;
+}
+
+/* - hero assets */
+.hero-video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+.hero-content{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* - hero text */
+.hero-text{
+  position: absolute;
+  top: 38.2%;
+  left: 70%;
+  transform: translate(-50%,-50%);
+
+  width: 700px;
+  max-width: 90vw;
+
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 200;
+  text-align: left;
+  word-spacing: 0.12em;
+}
+
+/* =======================================================================
+   Index (Home)
+   ======================================================================= */
+
+/* index
+- home-content (placeholder — copy your work text section style)
+*/
+.home-content{
+  background: #fff;
+  padding: 42px 0 80px;
+}
+
+.home-content .home-text{
+  margin: 0;
+  max-width: 720px;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.7;
+  color: #1f1f1f;
+}
+
+/* =======================================================================
+   Publication
+   ======================================================================= */
+
+/* publication
+- publication section wrapper
+*/
+.publication-section{
+  background: #fff;
+  padding: 42px 0 80px;
+}
+
+/* publication
+- filter-category (tabs / filters, shared with misc)
+*/
+.filter-shell{ position: relative; }
+
+.filter-radio{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filter-tabs{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.filter-tabs label{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 120px;
+  height: 36px;
+  padding: 0 16px;
+
+  font-size: 14px;
+  font-weight: 200;
+  cursor: pointer;
+  user-select: none;
+
+  background: #000;
+  color: #fff;
+  opacity: 0.6;
+}
+
+/* (keep: no divider for labels) */
+.filter-tabs label + label::before{ content: none; }
+
+/* publication > filter-category (active states) */
+#pub-all:checked ~ .filter-tabs label[for="pub-all"],
+#pub-xr:checked ~ .filter-tabs label[for="pub-xr"],
+#pub-haptics:checked ~ .filter-tabs label[for="pub-haptics"],
+#pub-access:checked ~ .filter-tabs label[for="pub-access"]{
+  font-weight: 500;
+  opacity: 1;
+}
+
+/* publication
+- pub-item list filtering
+  (display rules driven by radio selection + data-category on items)
+*/
+#pub-all:checked ~ .filter-panels .pub-item{ display: grid; }
+#pub-xr:checked ~ .filter-panels .pub-item{ display: none; }
+#pub-xr:checked ~ .filter-panels .pub-item[data-category~="xr"]{ display: grid; }
+#pub-haptics:checked ~ .filter-panels .pub-item{ display: none; }
+#pub-haptics:checked ~ .filter-panels .pub-item[data-category~="haptics"]{ display: grid; }
+#pub-access:checked ~ .filter-panels .pub-item{ display: none; }
+#pub-access:checked ~ .filter-panels .pub-item[data-category~="access"]{ display: grid; }
+
+/* publication
+- pub-item
+  - pub-tn-figure
+  - pub-text
+*/
+.pub-item{
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 30px;
+  align-items: start;
+  margin-bottom: 50px;
+  color: inherit;
+}
+
+/* - pub-tn-figure */
+.pub-thumb{
+  width: 160px;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+}
+
+/* - pub-body + pub-text/meta/year */
+.pub-body{
+  margin: 0;
+}
+
+.pub-text{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #111;
+}
+
+.pub-text a{ text-decoration: none; }
+
+/* - pub-meta */
+.pub-meta{
+  margin: 20px 0 0;
+  font-size: 14px;
+  font-weight: 200;
+  opacity: 0.85;
+}
+
+/* publication
+- pub-linkset (outer-page link row)
+- pub-term (outer-page single link)
+*/
+.pub-linkset{
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.pub-term{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  font-size: 15px;
+  font-weight: 200;
+
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pub-term ion-icon{ font-size: 17px; }
+
+/* =======================================================================
+   Misc
+   ======================================================================= */
+
+/* misc
+- misc-category (reuse shared filter-tabs styles)
+- misc-card filtering
+*/
+#misc-all:checked ~ .filter-tabs label[for="misc-all"],
+#misc-resources:checked ~ .filter-tabs label[for="misc-resources"],
+#misc-projects:checked ~ .filter-tabs label[for="misc-projects"],
+#misc-press:checked ~ .filter-tabs label[for="misc-press"]{
+  font-weight: 500;
+  opacity: 1;
+}
+
+/* misc list filtering */
+#misc-all:checked ~ .filter-panels .misc-card{ display: block; }
+#misc-projects:checked ~ .filter-panels .misc-card{ display: none; }
+#misc-projects:checked ~ .filter-panels .misc-card[data-category~="projects"]{ display: block; }
+#misc-resources:checked ~ .filter-panels .misc-card{ display: none; }
+#misc-resources:checked ~ .filter-panels .misc-card[data-category~="research"]{ display: block; }
+#misc-press:checked ~ .filter-panels .misc-card{ display: none; }
+#misc-press:checked ~ .filter-panels .misc-card[data-category~="press"]{ display: block; }
+
+/* misc
+- page wrapper
+*/
+.projects{
+  background: #fff;
+  padding: 48px 0 72px;
+}
+
+/* misc
+- mics-card grid
+*/
+.misc-cards-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 275px);
+  column-gap: 62.5px; /* (950 - 3*275) / 2 */
+  row-gap: 40px;
+
+  grid-auto-rows: 10px;
+  align-items: start;
+  justify-content: start;
+  width: 100%;
+}
+
+/* misc
+- mics-card
+  - misc-tn-figure
+  - misc-text
+*/
+.misc-card{
+  width: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+.misc-card-link{ display: block; }
+
+/* - misc-tn-figure */
+.misc-card-image{
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* - misc-text */
+.misc-card-body{ padding: 14px 0 16px; }
+
+.misc-card-title{
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.misc-card-meta{
+  margin: 5px 0 5px;
+  font-size: 14px;
+  font-weight: 200;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.misc-card-year{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* =======================================================================
+   craft2
+   ======================================================================= */
+
+/* craft2
+- craft2-content (placeholder — copy your work text section style)
+*/
+.craft2-content{
+  background: #fff;
+  padding: 42px 0 80px;
+}
+
+.craft2-content .craft2-text{
+  margin: 0;
+  max-width: 720px;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.7;
+  color: #1f1f1f;
+}
+
+/* =======================================================================
+   About
+   ======================================================================= */
+
+/* about
+- wrapper
+*/
+.about-intro{ padding: 150px 0 90px; }
+
+/* about
+- grid layout
+*/
+.about-grid{
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  grid-template-areas:
+    "photo text"
+    "contact links";
+  align-items: start;
+  column-gap: 20px;
+  row-gap: 0px;
+}
+
+/* about
+- about-figure
+*/
+.about-photo-wrap{
+  grid-area: photo;
+  align-self: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.about-photo{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* about
+- about-links
+*/
+.about-links-bar{
+  grid-area: links;
+  display: flex;
+  align-items: stretch;
+  gap: 45px;
+  margin-top: 0;
+  align-self: end;
+}
+
+.about-tab-link{
+  flex: 1 1 0;
+  min-width: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 36px;
+  padding: 0 12px;
+
+  font-size: 14px;
+  font-weight: 200;
+
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.about-tab-link:hover{ opacity: 0.85; }
+
+.about-tab-link ion-icon{ font-size: 18px; }
+
+/* about
+- about-text
+*/
+.about-text{
+  grid-area: text;
+  margin: 0;
+  max-width: 800px;
+
+  color: #1f1f1f;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.5;
+}
+
+.about-text a{ text-decoration: underline; }
+
+/* about
+- contact block (part of about-text / about-links area)
+*/
+.about-contact{
+  grid-area: contact;
+  width: 100%;
+  max-width: 340px;
+  align-self: end;
+}
+
+.about-contact-label{
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+}
+
+.about-contact-emails{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #111;
+}
+
+.about-contact-emails a{
+  display: block;
+  text-decoration: underline;
+  color: inherit;
+}
+
+.about-contact-emails a + a{ margin-top: 2px; }
+
+/* =======================================================================
+   Timeline — 左侧 title，右侧 tree（竖线 + 圆圈 + 卡片），支持 subtree
+   ======================================================================= */
+
+/* =======================================================================
+   Timeline — dot 永远整行居中（50%），竖线自动上下延伸，支持 subtree
+   ======================================================================= */
+
+   .timeline{
+    padding: 0;
+  
+    /* 你可以按需调这些参数 */
+    --timeline-dot-size: 12px;
+    --timeline-line-width: 2px;
+    --timeline-line-gap: 10px;
+    --timeline-line-color: rgba(0,0,0,0.2);
+  
+    /* 左侧轨道（竖线所在列）的宽度：建议比 dot 大一点更稳 */
+    --timeline-track-width: 12px;
+  
+    /* dot 到卡片之间的距离（原来你用 dot-to-logo-gap） */
+    --timeline-dot-to-card-gap: 50px;
+  
+    /* subtree 整体右移多少（你原来叫 subtree-offset） */
+    --timeline-subtree-offset: 55px;
+ 
+  /* 卡片上下间距（作用在卡片本体，不影响线条轨道计算） */
+   --timeline-card-vertical-gap: 10px;
+ 
+   /* subtree 底部内边距 */
+   --timeline-subtree-padding-bottom: 70px;
+ 
+   /* 除 title 外，timeline 内容整体左内边距 */
+   --timeline-content-padding-left: 50px;
+  
+    /* 标题字号（卡片内 title） */
+    --timeline-title-font-size: 18px;
+    --timeline-title-line-height: 1.25;
+  }
+  
+  .timeline-title{
+    margin: 0 0 28px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+  }
+  
+  .timeline-tree{
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: var(--timeline-content-padding-left);
+  }
+  
+  .timeline-item{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  
+  /* 一行：左轨道 + 右内容 */
+  .timeline-row{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0;
+    padding: 0;
+  }
+  
+  /* 左侧轨道：承载竖线/圆点 */
+  .timeline-track{
+    position: relative;
+    flex: 0 0 auto;
+    width: var(--timeline-track-width);
+    min-height: 100%;
+  }
+  
+  /* 上下两段竖线：以整行 50% 为分界，绕开 dot（留 gap） */
+  .timeline-row .timeline-track::before,
+  .timeline-row .timeline-track::after{
+    content: "";
+    position: absolute;
+    left: calc(50% - var(--timeline-line-width) / 2);
+    width: var(--timeline-line-width);
+    background: var(--timeline-line-color);
+  }
+  
+  /* 上半段：从行顶到 dot 上方（留 gap） */
+  .timeline-row .timeline-track::before{
+    top: 0;
+    height: calc(50% - (var(--timeline-dot-size) / 2) - var(--timeline-line-gap));
+  }
+  
+  /* 下半段：从 dot 下方（留 gap）到行底 */
+  .timeline-row .timeline-track::after{
+    bottom: 0;
+    height: calc(50% - (var(--timeline-dot-size) / 2) - var(--timeline-line-gap));
+  }
+  
+  /* 第一项不画上半段；最后一项不画下半段 */
+  .timeline-tree > .timeline-item:first-child > .timeline-row .timeline-track::before{
+    display: none;
+  }
+  .timeline-tree > .timeline-item:last-child > .timeline-row .timeline-track::after{
+    display: none;
+  }
+  
+  /* 旧 connector 结构保留，但不参与绘制（和你原来一致） */
+  .timeline-connector{ display: none; }
+  .timeline-segment{ display: none; }
+  
+  /* ✅ dot：永远整行居中 */
+  .timeline-dot{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--timeline-dot-size);
+    height: var(--timeline-dot-size);
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid rgba(0,0,0,0.7);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  
+  /* 右侧卡片 */
+  .timeline-card{
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+    margin-left: var(--timeline-dot-to-card-gap);
+    margin-top: var(--timeline-card-vertical-gap);
+    margin-bottom: var(--timeline-card-vertical-gap);
+    padding: 0;
+    background: #fff;
+  }
+  
+  .timeline-card-logo{
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    display: block;
+    background: #fff;
+  }
+  
+  .timeline-card-body{
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+  }
+  
+  .timeline-card-title{
+    margin: 0 0 6px;
+    font-size: var(--timeline-title-font-size);
+    line-height: var(--timeline-title-line-height);
+    font-weight: 500;
+    color: #111;
+  }
+  
+  .timeline-card-meta{
+    margin: 5px 0 5px;
+    font-size: 14px;
+    font-weight: 200;
+    font-style: italic;
+    opacity: 0.85;
+    color: #1f1f1f;
+  }
+  
+  .timeline-card-note{
+    margin: 0;
+    font-size: 14px;
+    font-weight: 300;
+    color: #1f1f1f;
+    line-height: 1.45;
+  }
+  
+  /* subtree 容器：整体向右偏移 */
+  .timeline-subtree{
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-left: var(--timeline-subtree-offset);
+    padding: 0 0 var(--timeline-subtree-padding-bottom);
+    border-left: none;
+    position: relative;
+  }
+  
+  /* ✅ main tree 的主干在 subtree 区域持续向下（避免 subtree 视觉截断）
+     这条线的位置 = 主干轨道中心（row 内）映射到 subtree 内部坐标 */
+  .timeline-tree--main
+    > .timeline-item--has-subtree:not(:last-child)
+    > .timeline-subtree::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * var(--timeline-subtree-offset) + (var(--timeline-track-width) / 2) - (var(--timeline-line-width) / 2));
+    width: var(--timeline-line-width);
+    background: var(--timeline-line-color);
+  }
+
+/* =======================================================================
+   Subpage (pages/*.html) — 详情页模板，正文用 content-* 块
+   ======================================================================= */
+
+/* subpage - page wrapper */
+.subpage{
+  background: #fff;
+  padding: calc(70px + 36px) 0 80px;
+}
+
+/* subpage - header */
+.subpage-head{
+  color: #111;
+  padding-top: 15px;
+}
+
+.subpage-title{
+  margin: 0 0 25px;
+  font-size: 33px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.subpage-top{
+  display: grid;
+  align-items: start;
+  gap: 0;
+}
+
+.subpage-head--text-meta .subpage-top{
+  grid-template-columns: 1fr 40px 1px 40px 1fr;
+  align-items: center;
+}
+
+.subpage-head--text-meta .subpage-top-left{ grid-column: 1; }
+.subpage-head--text-meta .subpage-vrule{ grid-column: 3; }
+.subpage-head--text-meta .subpage-top-right{ grid-column: 5; }
+
+.subpage-vrule{
+  width: 1px;
+  height: 200px;
+  background: rgba(0,0,0,0.6);
+  justify-self: center;
+  align-self: center;
+}
+
+.subpage-lede{
+  margin: 0px 0px 0px;
+  padding-left: 20px;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.9;
+  color: #1f1f1f;
+  max-width: 600px;
+}
+
+.subpage-head--media-left .subpage-top{
+  grid-template-columns: 420px 1fr;
+  gap: 44px;
+}
+
+.subpage-head--media-right .subpage-top{
+  grid-template-columns: 1fr 420px;
+  gap: 44px;
+}
+
+.subpage-media-img{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.subpage-meta{
+  margin: 0;
+  padding: 0;
+}
+
+.subpage-meta--compact .subpage-meta-line{
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px;
+  margin: 0 0 20px;
+  align-items: baseline;
+}
+
+.subpage-meta--compact .subpage-meta-line:last-child{ margin-bottom: 0; }
+
+.subpage-meta--stack .subpage-meta-line{
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px;
+  margin: 10px 0 0;
+  align-items: baseline;
+}
+
+.subpage-meta dt{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #676767;
+}
+
+.subpage-meta dd{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.35;
+  color: #1f1f1f;
+}
+
+.subpage-meta a{
+  color: inherit;
+  text-decoration: underline;
+}
+
+.subpage-links{
+  margin-top: 22px;
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.subpage-link{
+  font-size: 15px;
+  font-weight: 200;
+  text-decoration: underline;
+}
+
+.subpage-linkset{
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.subpage-term{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
+  font-weight: 200;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.subpage-term ion-icon{ font-size: 18px; }
+
+.subpage-meta-row{
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+/* =======================================================================
+   Footer
+   ======================================================================= */
+.site-footer{
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.12);
+  padding: 24px 0 40px;
+}
+
+.site-footer .container{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.site-footer small{
+  font-size: 12px;
+  font-weight: 200;
+}
+
+/* =======================================================================
+   Responsive Web Design
+   ======================================================================= */
+
+/* ===== tablets / small desktop ===== */
+@media (max-width: 900px){
+  .container{
+    width: min(950px, 100% - 32px);
+  }
+
+  .nav-shell{
+    min-height: auto;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 20px;
+  }
+
+  .brand{ font-size: 24px; }
+
+  .nav-list{
+    width: auto;
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .nav-list a{ font-size: 16px; }
+
+  .hero{ height: 460px; }
+
+  .hero-text{
+    left: 52%;
+    width: min(42vw, 420px);
+    font-size: 20px;
+  }
+
+  .misc-cards-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+
+  .about-intro{ padding-top: 130px; }
+
+  .about-grid{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "photo"
+      "text"
+      "links"
+      "contact";
+    column-gap: 0;
+    row-gap: 28px;
+  }
+
+  .about-photo-wrap{
+    width: 260px;
+    height: 260px;
+  }
+
+  .about-text{ font-size: 21px; }
+
+  /* publication tablet */
+  .pub-item{
+    grid-template-columns: 132px 1fr;
+    gap: 14px;
+  }
+
+  .pub-thumb{
+    width: 132px;
+    height: 92px;
+  }
+
+  .pub-text{ font-size: 15px; }
+
+  /* content-duo tablet: 行向改为 column，图占满宽 */
+  .content-duo{
+    flex-direction: column !important;
+  }
+  .content-duo .content-img-wrap,
+  .content-media .content-img-wrap{
+    flex: 0 0 100% !important;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* subpage tablet */
+  .subpage{ padding-top: calc(70px + 28px); }
+
+  .subpage-title{ font-size: 34px; }
+
+  .subpage-head--text-meta .subpage-top{
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .subpage-vrule{ display: none; }
+
+  .subpage-head--media-left .subpage-top,
+  .subpage-head--media-right .subpage-top{
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+/* ===== phones ===== */
+@media (max-width: 640px){
+  .hero{ height: 380px; }
+
+  .hero-content{
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+  }
+
+  .hero-text{
+    position: static;
+    transform: none;
+    width: auto;
+    padding: 28px 0;
+    font-size: 18px;
+  }
+
+  .misc-cards-grid{ grid-template-columns: 1fr; }
+
+  .about-intro{
+    padding-top: 120px;
+    padding-bottom: 56px;
+  }
+
+  .about-photo-wrap{
+    width: 210px;
+    height: 210px;
+  }
+
+  .about-text{
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  /* publication phone */
+  .filter-tabs label{ font-size: 14px; }
+
+  .pub-item{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .pub-thumb{
+    width: min(220px, 100%);
+    height: auto;
+    aspect-ratio: 159 / 108;
+  }
+
+  .pub-text{
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* subpage phone */
+  .subpage-title{ font-size: 24px; }
+}

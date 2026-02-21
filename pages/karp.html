@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chester | CRAFT^2</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="nav-shell">
+        <span class="brand">Chester Pan</span>
+        <nav aria-label="Primary">
+          <ul class="nav-list">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../publication.html" aria-current="page">Publication</a></li>
+            <li><a href="../misc.html">Misc</a></li>
+            <li><a href="../craft-square.html">CRAFT^2</a></li>
+            <li><a href="../gallery.html">Gallery</a></li>
+            <li><a href="../about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="subpage" aria-label="Publication Detail">
+        <div class="container subpage-wrap">
+          <header class="subpage-head subpage-head--text-meta" aria-label="Subpage Header">
+            <h1 class="subpage-title">
+              karP: an experiential prototype for Kinesthetic Augmented Reality on mobile — Playful, Portable, Producible
+            </h1>
+
+            <div class="subpage-top">
+              <div class="subpage-top-left">
+                <p class="subpage-lede">
+                  Kinesthetic interaction systems on mobile augmented reality (MAR) platforms remain largely conceptual. karP is an
+                  experiential prototype that integrates a mechanical kinesthetic device with a smartphone-based AR environment to explore
+                  this design space.
+                </p>
+              </div>
+
+              <div class="subpage-vrule" aria-hidden="true"></div>
+
+              <div class="subpage-top-right">
+                <dl class="subpage-meta subpage-meta--compact" aria-label="Project metadata">
+                  <div class="subpage-meta-line">
+                    <dt><strong><em>Date:</em></strong></dt>
+                    <dd>2025</dd>
+                  </div>
+                  <div class="subpage-meta-line">
+                    <dt><strong><em>Venue:</em></strong></dt>
+                    <dd>ACM Designing Interactive Systems 2025</dd>
+                  </div>
+                  <div class="subpage-meta-line">
+                    <dt><strong><em>Team:</em></strong></dt>
+                    <dd>CRAFT^2 Group</dd>
+                  </div>
+                  <div class="subpage-meta-line">
+                    <dt><strong><em>Keywords:</em></strong></dt>
+                    <dd>Kinesthetics · Mobile AR · Teleporation</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </header>
+
+
+
+          <section class="subpage-content" aria-label="content">
+
+
+
+            <br>
+            <hr class="content-divider" />
+
+            <h2 class="content-title">Overview</h2>
+
+            <div class="content-duo" style="--content-direction: row-reverse; --content-gap: 40px; --content-img-align: center; --content-text-align: center; --content-img-size: 45%;">
+              <div class="content-img-wrap">
+                <img class="content-img" src="../assets/pub/karp-1.webp" alt="karP device overview" loading="lazy" />
+              </div>
+              <div class="content-text">
+                karP's device features a manipulandum-exoskeleton design that supports kinesthetic input and output for striking gestures 
+                with handheld items. Leveraging the native capabilities of MAR, the smartphone functions simultaneously as the visual-spatial 
+                interface and spatial tracker, coordinating with the kinesthetic device to control the avatar's physical interaction in virtual 
+                environments.
+              </div>
+            </div>
+
+
+
+            <br>
+            <hr class="content-divider"/>
+
+            <h2 class="content-title">Kinesthetic Device</h2>
+
+            <div class="content-duo" style="--content-direction: column-reverse; --content-gap: 20px; --content-img-align: start; --content-text-align: center; --content-img-size: 70%;">
+              <div class="content-img-wrap">
+                <img class="content-img" src="../assets/pub/karp-2.webp" alt="karP kinesthetic mechanism" loading="lazy" />
+              </div>
+              <p class="content-text">
+                karP's kinesthetic device is designed to be worn on the forearm in an exoskeleton-like configuration, allowing reaction forces
+                during kinesthetic feedback to be supported directly by the user's body. The core manipulandum employs a two-joint spherical
+                mechanism responsible both for capturing user input and delivering impulse haptic feedback. The two joints are aligned with the
+                user's wrist axes, making the DoF independent and allowing us to define the workspace directly from the natural range of motion.
+              </p>
+            </div>
+
+            <br>
+
+            <div class="content-prose" style="--content-text-align: end; --content-text-size: 70%;">
+              <p class="content-text">
+                For actuation, karP employs a classic capstan structure, amplifying the relatively weak torque output from compact brushless DC
+                motors while ensuring smooth transmission during manipulation. Structural components are fabricated via 3D printing, assembled
+                with screws, and connected using metal cables, relying on accessible electromechanical parts to support reproducibility.
+              </p>
+            </div>
+
+
+
+            <br>
+            <hr class="content-divider"/>
+
+            <h2 class="content-title">AR Experiences</h2>
+
+            <div class="content-duo" style="--content-direction: column; --content-gap: 20px; --content-img-align: center; --content-text-align: center; --content-img-size: 90%;">
+              <div class="content-img-wrap">
+                <img class="content-img" src="../assets/pub/karp-3.webp" alt="karP kinesthetic mechanism" loading="lazy" />
+              </div>
+              <p class="content-text">
+                We developed karP's AR application for iOS to run on iPhones, leveraging SceneKit for scene construction, physics simulation, 
+                and kinesthetic feedback computation, and ARKit for device camera tracking, environmental understanding, and spatial frame stabilization.
+                Inspired by the interaction mechanisms found in XR games, we designed a Ball Playground for karP in delivering haptic I/O experinces.
+                <br><br>
+                We introduce variation in the initial states of objects (static, dynamic), their physical properties (mass, radius), and the avatar's 
+                holding items, where all are unified by the core goal of engaging users through diverse and expressive physical interactions around 
+                the featured gesture.
+              </p>
+            </div>
+
+
+            
+            <br>
+            <hr class="content-divider" />
+
+            <h2 class="content-title">BibTeX Citation</h2>
+            <div class="content-code" style="--content-code-width: 90%; --content-code-min-height: 140px;">
+              <pre class="content-code-body">
+@inbook{10.1145/3715668.3735607,
+author    = {Pan, Zhaohan and Ge, Gaolin and Lu, Haoran and Meng, Zhihao and Wu, Hongrui and Yang, Qifeng and Liang, Jingyang},
+title     = {karP: an experiential prototype for Kinesthetic Augmented Reality on mobile — Playful, Portable, Producible},
+booktitle = {Companion Publication of the 2025 ACM Designing Interactive Systems Conference},
+year      = {2025},
+doi       = {10.1145/3715668.3735607}
+}
+              </pre>
+            </div>
+
+          </section>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <small>© 2026 Rodrigo Gallardo</small>
+      </div>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>

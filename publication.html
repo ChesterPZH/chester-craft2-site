@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chester | CRAFT^2</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="nav-shell">
+        <span class="brand">Chester(Zhaohan) Pan</span>
+        <nav aria-label="Primary">
+          <ul class="nav-list">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./publication.html" aria-current="page">Publication</a></li>
+            <li><a href="./misc.html">Misc</a></li>
+            <li><a href="./craft-square.html">CRAFT^2</a></li>
+            <li><a href="./gallery.html">Gallery</a></li>
+            <li><a href="./about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Intro">
+        <video
+          class="hero-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          poster="./assets/research/karp/karp-1.webp"
+        >
+          <!-- 若无本地视频，仍可先用 poster 静态图 -->
+        </video>
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="container hero-content">
+          <p class="hero-text">
+            Chester's research involed in variaty of Human-Computer Interaction area, and are showcased in HCI venue Conferences.
+          </p>
+        </div>
+      </section>
+
+      <section class="publication-section" aria-label="Publications">
+        <div class="container">
+          <div class="filter-shell">
+            <input
+              class="filter-radio"
+              type="radio"
+              name="pub-category"
+              id="pub-all"
+              checked
+            />
+            <input
+              class="filter-radio"
+              type="radio"
+              name="pub-category"
+              id="pub-xr"
+            />
+            <input
+              class="filter-radio"
+              type="radio"
+              name="pub-category"
+              id="pub-haptics"
+            />
+            <input
+              class="filter-radio"
+              type="radio"
+              name="pub-category"
+              id="pub-access"
+            />
+
+            <div class="filter-tabs" role="tablist" aria-label="Publication Categories">
+              <label for="pub-all">All</label>
+              <label for="pub-xr">Spatial Computing | AR</label>
+              <label for="pub-haptics">Haptics</label>
+              <label for="pub-access">Accessibility</label>
+            </div>
+
+            <div class="filter-panels">
+              <!-- 每项只写一次，用 data-category 检索分类 -->
+              <article class="pub-item" data-category="access">
+                <img class="pub-thumb" src="./assets/pub/apf-tn.jpg" alt="rulAR" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    <u>Z. Pan</u>, "<strong>Personal 3D Printing without Visual Dependency in the Generative AI Era: Opportunities and Challenges</strong>", 
+                    under review DIS' 26.
+                  </p>
+                  <p class="pub-meta">Spatial Computing · Scene Reconstruction · Indoor Design</p>
+                  <!-- 暂无外部链接，后续可在此补充 -->
+                </div>
+              </article>
+
+              <article class="pub-item" data-category="xr">
+                <img class="pub-thumb" src="./assets/pub/rular-tn.jpg" alt="rulAR" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    <u>Z. Pan</u>, "<strong>rulAR: Spatial Measurement in Indoor Scenes via Intelligent Labeling and Immersive Visualization</strong>", 
+                    in <em>Proceedings of the 2025 International Conference on Human-Engaged Computing (ICHEC 2025), November 21--23, 2025, Singapore, Singapore</em>.
+                  </p>
+                  <p class="pub-meta">
+                    <span class="pub-linkset" aria-label="Links">
+                      <a
+                        class="pub-term pub-term--readmore"
+                        href="./pages/rular.html"
+                        >
+                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                        Read More
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="./assets/pdf/ICHEC_25.pdf"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                        Paper
+                      </a>
+                    </span>
+                  </p>
+                </div>
+              </article>
+
+              <article class="pub-item" data-category="xr">
+                <img class="pub-thumb" src="./assets/pub/marker-tn.jpg" alt="mARker" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    <u>Z. Pan</u>, "<strong>mARker: Hybrid-Interfaced Spatial Sketching via iPad AR, Apple Pencil, and an Instantly Crafted Tracker</strong>", 
+                    in <em>Proceedings of the 2025 IEEE International Symposium on Mixed and Augmented Reality Adjunct (ISMAR '25-Adjunct), October 08--12, 2025, Daejeon, Korea, Republic of</em>.
+                  </p>
+                  <p class="pub-meta">
+                    <span class="pub-linkset" aria-label="Links">
+                      <a
+                        class="pub-term pub-term--readmore"
+                        href="./pages/marker.html"
+                      >
+                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                        Read More
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="https://ieeexplore.ieee.org/document/11236371"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                        DOI
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="https://youtu.be/zoM2F_kCsGM?si=zHgigjCpwlEOiQn3"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                        Video
+                      </a>
+                    </span>
+                  </p>
+                </div>
+              </article>
+
+              <article class="pub-item" data-category="xr haptics">
+                <img class="pub-thumb" src="./assets/pub/karp-tn.jpg" alt="karP" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    <u>Z. Pan</u>, G. Ge, H. Lu, Z. Meng, H. Wu, Q. Yang, J. Liang, "<strong>karP: an experiential prototype for Kinesthetic Augmented Reality on mobile — Playful, Portable, Producible</strong>", 
+                    in <em>Designing Interactive Systems Conference (DIS '25 Companion), July 05--09, 2025, Funchal, Portugal</em>.
+                  </p>
+                  <p class="pub-meta">
+                    <span class="pub-linkset" aria-label="Links">
+                      <a
+                        class="pub-term pub-term--readmore"
+                        href="./pages/karp.html"
+                      >
+                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                        Read More
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="https://dl.acm.org/doi/full/10.1145/3715668.3735607"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                        DOI
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="https://youtu.be/KyL3hKwZwgw?si=bezrsy2qR3SJyW_e"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                        Video
+                      </a>
+
+                    </span>
+                  </p>
+                </div>
+              </article>
+
+              <article class="pub-item" data-category="haptics access">
+                <img class="pub-thumb" src="./assets/pub/tc-tn.jpg" alt="Tangible Compass" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    <u>Z. Pan</u>, G. Ge, Z. Jiang, Z. Meng, L. Wang, H. Wu, L. Wang, J. Liang, H. Wen, "<strong>Tangible Compass: An Affordable and DIY-Friendly Handheld Kinesthetic Device for Haptic Accessible Navigation</strong>", 
+                    in <em>Chinese CHI 2024 (CHCHI 2024), November 22-25, 2024, Shenzhen, China</em>.
+                  </p>
+                  <p class="pub-meta">
+                    <span class="pub-linkset" aria-label="Links">
+                      <a
+                        class="pub-term pub-term--readmore"
+                        href="./pages/tangible-compass.html"
+                      >
+                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                        Read More
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="https://dl.acm.org/doi/full/10.1145/3758871.3758914"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                        DOI
+                      </a>
+                      <a
+                        class="pub-term"
+                        href="https://youtu.be/lYYmHA9p7SU?si=2TwBhY-zxBnH3cna"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                        Video
+                      </a>
+                    </span>
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <small>Chester(Zhaohan) Pan & CRAFT Square © 2024 - 2026. All Rights Reserved.</small>
+      </div>
+    </footer>
+
+    <script src="./app.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>
