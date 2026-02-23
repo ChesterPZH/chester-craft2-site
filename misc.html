@@ -9,13 +9,13 @@
   <body>
     <header class="site-header">
       <div class="nav-shell">
-        <span class="brand">Chester(Zhaohan) Pan</span>
+        <span class="brand">Chester Pan | CRAFT^2</span>
         <nav aria-label="Primary">
           <ul class="nav-list">
             <li><a href="./index.html">Home</a></li>
+            <li><a href="./craft-square.html">CRAFT^2</a></li>
             <li><a href="./publication.html">Publication</a></li>
             <li><a href="./misc.html" aria-current="page">Misc</a></li>
-            <li><a href="./craft-square.html">CRAFT^2</a></li>
             <li><a href="./gallery.html">Gallery</a></li>
             <li><a href="./about.html">About</a></li>
           </ul>
@@ -78,16 +78,36 @@
             />
 
             <div class="filter-tabs" role="tablist" aria-label="Misc Categories">
-              <label for="misc-all">All</label>
+              <label for="misc-all">All Categories</label>
               <label for="misc-projects">Projects</label>
               <label for="misc-resources">Resources</label>
               <label for="misc-press">Press</label>
             </div>
 
+            <input class="filter-radio" type="radio" name="misc-contributor" id="misc-contrib-all" checked />
+            <input class="filter-radio" type="radio" name="misc-contributor" id="misc-contrib-craft2" />
+            <input class="filter-radio" type="radio" name="misc-contributor" id="misc-contrib-personal" />
+
+            <div class="filter-tabs filter-tabs--contributor" role="tablist" aria-label="Contributor">
+              <label for="misc-contrib-all">All teams</label>
+              <label for="misc-contrib-craft2">CRAFT^2</label>
+              <label for="misc-contrib-personal">Personal</label>
+            </div>
+
             <div class="filter-panels">
               <!-- 每项只写一次，用 data-category 检索分类 -->
               <div class="misc-cards-grid">
-                <article class="misc-card" data-category="projects">
+                <article class="misc-card" data-category="projects resources" data-contributor="personal">
+                  <a class="misc-card-link" href="./pages/ios-ar-tracking-template-app.html">
+                    <img class="misc-card-image" src="./assets/misc/iosar-tn.jpg" alt="iOS AR Tracking Template App" loading="lazy" />
+                    <div class="misc-card-body">
+                      <h2 class="misc-card-title">iOS AR Tracking Template App</h2>
+                      <p class="misc-card-meta">ARKit · OpenCV · Pose Tracking</p>
+                      <p class="misc-card-year">2026</p>
+                    </div>
+                  </a>
+                </article>
+                <article class="misc-card" data-category="projects" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1VoMmLpnHU--84Q5jd8K3PnlZL7vivQBt/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/3dpc-tn.jpg" alt="Defect Detection via Local-Patch Comparison" loading="lazy" />
                     <div class="misc-card-body">
@@ -97,7 +117,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects">
+                <article class="misc-card" data-category="projects" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1JJUSq4itv0EYDZm_So3eM3zBsph3HtLY/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/echo-tn.jpg" alt="A 3D-games AI Assistant for BLV Players" loading="lazy" />
                     <div class="misc-card-body">
@@ -107,7 +127,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="press">
+                <article class="misc-card" data-category="press" data-contributor="craft2">
                   <a class="misc-card-link" href="https://fab.city/fab-city-challenge-a-new-form-of-learning-toward-a-sustainable-city/" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/fcc.jpg" alt="Fab City Challenge demo" loading="lazy" />
                     <div class="misc-card-body">
@@ -117,7 +137,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects">
+                <article class="misc-card" data-category="projects" data-contributor="personal">
                   <a class="misc-card-link" href="https://charm.stanford.edu/ME327/2024-Group7" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/caligraphy-tn.jpg" alt="Calligraphy Training Device" loading="lazy" />
                     <div class="misc-card-body">
@@ -127,7 +147,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects">
+                <article class="misc-card" data-category="projects" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1PbeKH4Vahs31snNXCpyP9uwYzQWMvDQm/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/optimization-tn.jpg" alt="Infill Pattern Design Optimization for FDM" loading="lazy" />
                     <div class="misc-card-body">
@@ -137,7 +157,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects">
+                <article class="misc-card" data-category="projects" data-contributor="craft2">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/16dfAEJCa-hqpLhporrtTp1ZaevW-SHKF/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/musicbox-tn.jpg" alt="Customizable and Interactive Music Box" loading="lazy" />
                     <div class="misc-card-body">
@@ -147,27 +167,17 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects">
-                  <a class="misc-card-link" href="https://www.illimitedlab.com/" target="_blank" rel="noreferrer noopener">
-                    <img class="misc-card-image" src="./assets/misc/spider-tn.jpg" alt="Spider Web Modal Analysis" loading="lazy" />
-                    <div class="misc-card-body">
-                      <h2 class="misc-card-title">Spider Web Modal Analysis</h2>
-                      <p class="misc-card-meta">Direct Ink Writing · 3D Printing</p>
-                      <p class="misc-card-year">2023</p>
-                    </div>
-                  </a>
-                </article>
-                <article class="misc-card" data-category="projects">
+                <article class="misc-card" data-category="projects" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1bhq3MzWN4AR0gq9yb9_4y7QciVyRISvC/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/fdmpeek-tn.jpg" alt="FDM PEEK Mechanics Characterization" loading="lazy" />
                     <div class="misc-card-body">
                       <h2 class="misc-card-title">FDM PEEK Mechanics Characterization</h2>
                       <p class="misc-card-meta">3D Printing · Mechanics</p>
-                      <p class="misc-card-year">2022</p>
+                      <p class="misc-card-year">2022 - 2023</p>
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="press">
+                <article class="misc-card" data-category="press" data-contributor="personal">
                   <a class="misc-card-link" href="https://www.ce.washington.edu/news/article/2022-07-05/third-annual-boeing-capstone" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/misc/boeing.jpg" alt="Third annual Boeing capstone" loading="lazy" />
                     <div class="misc-card-body">
