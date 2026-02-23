@@ -53,7 +53,70 @@ function onReady(fn) {
   }
 }
 
+function applyPublicationDualFilter() {
+  const shell = document.querySelector(".filter-shell");
+  if (!shell || !shell.querySelector("#pub-contrib-all")) return;
+  const categoryRadios = shell.querySelectorAll('input[name="pub-category"]');
+  const contributorRadios = shell.querySelectorAll('input[name="pub-contributor"]');
+  const items = shell.querySelectorAll(".filter-panels .pub-item");
+  const categoryMap = { "pub-all": null, "pub-xr": "xr", "pub-haptics": "haptics", "pub-access": "access" };
+  const contribMap = { "pub-contrib-all": null, "pub-contrib-craft2": "craft2", "pub-contrib-personal": "personal" };
+  const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
+  const categoryId = getChecked(categoryRadios)?.id;
+  const contribId = getChecked(contributorRadios)?.id;
+  const categoryVal = categoryMap[categoryId];
+  const contribVal = contribMap[contribId];
+  items.forEach((el) => {
+    const cat = el.getAttribute("data-category") || "";
+    const contrib = el.getAttribute("data-contributor") || "";
+    const categoryMatch = categoryVal == null || cat.split(/\s+/).includes(categoryVal);
+    const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
+    el.style.display = categoryMatch && contributorMatch ? "grid" : "none";
+  });
+}
+
+function applyMiscDualFilter() {
+  const shell = document.querySelector(".filter-shell");
+  if (!shell || !shell.querySelector("#misc-contrib-all")) return;
+  const categoryRadios = shell.querySelectorAll('input[name="misc-category"]');
+  const contributorRadios = shell.querySelectorAll('input[name="misc-contributor"]');
+  const items = shell.querySelectorAll(".filter-panels .misc-card");
+  const categoryMap = { "misc-all": null, "misc-projects": "projects", "misc-resources": "resources", "misc-press": "press" };
+  const contribMap = { "misc-contrib-all": null, "misc-contrib-craft2": "craft2", "misc-contrib-personal": "personal" };
+  const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
+  const categoryId = getChecked(categoryRadios)?.id;
+  const contribId = getChecked(contributorRadios)?.id;
+  const categoryVal = categoryMap[categoryId];
+  const contribVal = contribMap[contribId];
+  items.forEach((el) => {
+    const cat = el.getAttribute("data-category") || "";
+    const contrib = el.getAttribute("data-contributor") || "";
+    const categoryMatch = categoryVal == null || cat.split(/\s+/).includes(categoryVal);
+    const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
+    el.style.display = categoryMatch && contributorMatch ? "block" : "none";
+  });
+  requestAnimationFrame(layoutMiscMasonry);
+}
+
+function initDualFilters() {
+  const shell = document.querySelector(".filter-shell");
+  if (!shell) return;
+  if (shell.querySelector("#pub-contrib-all")) {
+    applyPublicationDualFilter();
+    shell.querySelectorAll('input[name="pub-category"], input[name="pub-contributor"]').forEach((r) => {
+      r.addEventListener("change", applyPublicationDualFilter);
+    });
+  }
+  if (shell.querySelector("#misc-contrib-all")) {
+    applyMiscDualFilter();
+    shell.querySelectorAll('input[name="misc-category"], input[name="misc-contributor"]').forEach((r) => {
+      r.addEventListener("change", applyMiscDualFilter);
+    });
+  }
+}
+
 onReady(() => {
+  initDualFilters();
   layoutMiscMasonry();
 
   // 图片加载会改变卡片高度：逐张监听并重排

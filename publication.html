@@ -9,13 +9,13 @@
   <body>
     <header class="site-header">
       <div class="nav-shell">
-        <span class="brand">Chester(Zhaohan) Pan</span>
+        <span class="brand">Chester Pan | CRAFT^2</span>
         <nav aria-label="Primary">
           <ul class="nav-list">
             <li><a href="./index.html">Home</a></li>
+            <li><a href="./craft-square.html">CRAFT^2</a></li>
             <li><a href="./publication.html" aria-current="page">Publication</a></li>
             <li><a href="./misc.html">Misc</a></li>
-            <li><a href="./craft-square.html">CRAFT^2</a></li>
             <li><a href="./gallery.html">Gallery</a></li>
             <li><a href="./about.html">About</a></li>
           </ul>
@@ -74,15 +74,25 @@
             />
 
             <div class="filter-tabs" role="tablist" aria-label="Publication Categories">
-              <label for="pub-all">All</label>
+              <label for="pub-all">All Categories</label>
               <label for="pub-xr">Spatial Computing | AR</label>
               <label for="pub-haptics">Haptics</label>
               <label for="pub-access">Accessibility</label>
             </div>
 
+            <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-all" checked />
+            <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-craft2" />
+            <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-personal" />
+
+            <div class="filter-tabs filter-tabs--contributor" role="tablist" aria-label="Contributor">
+              <label for="pub-contrib-all">All teams</label>
+              <label for="pub-contrib-craft2">CRAFT^2</label>
+              <label for="pub-contrib-personal">Personal</label>
+            </div>
+
             <div class="filter-panels">
               <!-- 每项只写一次，用 data-category 检索分类 -->
-              <article class="pub-item" data-category="access">
+              <article class="pub-item" data-category="access" data-contributor="personal">
                 <img class="pub-thumb" src="./assets/pub/apf-tn.jpg" alt="rulAR" />
                 <div class="pub-body">
                   <p class="pub-text">
@@ -94,7 +104,7 @@
                 </div>
               </article>
 
-              <article class="pub-item" data-category="xr">
+              <article class="pub-item" data-category="xr" data-contributor="personal">
                 <img class="pub-thumb" src="./assets/pub/rular-tn.jpg" alt="rulAR" />
                 <div class="pub-body">
                   <p class="pub-text">
@@ -124,7 +134,7 @@
                 </div>
               </article>
 
-              <article class="pub-item" data-category="xr">
+              <article class="pub-item" data-category="xr" data-contributor="personal">
                 <img class="pub-thumb" src="./assets/pub/marker-tn.jpg" alt="mARker" />
                 <div class="pub-body">
                   <p class="pub-text">
@@ -163,7 +173,7 @@
                 </div>
               </article>
 
-              <article class="pub-item" data-category="xr haptics">
+              <article class="pub-item" data-category="xr haptics" data-contributor="craft2">
                 <img class="pub-thumb" src="./assets/pub/karp-tn.jpg" alt="karP" />
                 <div class="pub-body">
                   <p class="pub-text">
@@ -203,7 +213,7 @@
                 </div>
               </article>
 
-              <article class="pub-item" data-category="haptics access">
+              <article class="pub-item" data-category="haptics access" data-contributor="craft2">
                 <img class="pub-thumb" src="./assets/pub/tc-tn.jpg" alt="Tangible Compass" />
                 <div class="pub-body">
                   <p class="pub-text">
