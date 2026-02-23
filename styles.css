@@ -574,7 +574,7 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .misc-card-meta{
-  margin: 5px 0 5px;
+  margin: 5px 0 7px;
   font-size: 14px;
   font-weight: 200;
   font-style: italic;
@@ -606,6 +606,110 @@ a{ color: inherit; text-decoration: none; }
   font-weight: 200;
   line-height: 1.7;
   color: #1f1f1f;
+}
+
+/* craft2
+- tab 切换整块内容（People / Our Journey），视觉效果同黑色 category bar
+*/
+.craft2-tab-shell{
+  position: relative;
+}
+
+.craft2-tab-radio{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.craft2-tabs{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.craft2-tabs label{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 200;
+  cursor: pointer;
+  user-select: none;
+  background: #000;
+  color: #fff;
+  opacity: 0.6;
+}
+
+#craft2-people:checked ~ .craft2-tabs label[for="craft2-people"],
+#craft2-journey:checked ~ .craft2-tabs label[for="craft2-journey"]{
+  font-weight: 500;
+  opacity: 1;
+}
+
+.craft2-tab-panels .craft2-panel--journey{ display: none; }
+#craft2-people:checked ~ .craft2-tab-panels .craft2-panel--people{ display: block; }
+#craft2-people:checked ~ .craft2-tab-panels .craft2-panel--journey{ display: none; }
+#craft2-journey:checked ~ .craft2-tab-panels .craft2-panel--people{ display: none; }
+#craft2-journey:checked ~ .craft2-tab-panels .craft2-panel--journey{ display: block; }
+
+/* craft2
+- member-cards-grid
+*/
+.member-cards-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 100px;
+  row-gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+.member-card{
+  width: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+.member-card-image{
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.member-card-body{
+  padding: 14px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-weight: 400; /* 与 misc-card 一致：卡片内建立正常字重，name/role 不写 weight 也显粗 */
+}
+
+/* 三行信息：1 姓名 2 role=单位 3 affiliation=职位，与 misc card 一致（title 无 weight，year 500，meta 200） */
+.member-card-name{
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.member-card-role{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.member-card-affiliation{
+  margin: 7px 0 0;
+  font-size: 14px;
+  font-weight: 200;
+  font-style: italic;
+  opacity: 0.85;
 }
 
 /* =======================================================================
