@@ -81,7 +81,7 @@ function applyMiscDualFilter() {
   const categoryRadios = shell.querySelectorAll('input[name="misc-category"]');
   const contributorRadios = shell.querySelectorAll('input[name="misc-contributor"]');
   const items = shell.querySelectorAll(".filter-panels .misc-card");
-  const categoryMap = { "misc-all": null, "misc-projects": "projects", "misc-resources": "resources", "misc-press": "press" };
+  const categoryMap = { "misc-all": null, "misc-projects": "projects", "misc-resources": "resources" };
   const contribMap = { "misc-contrib-all": null, "misc-contrib-craft2": "craft2", "misc-contrib-personal": "personal" };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
   const categoryId = getChecked(categoryRadios)?.id;
@@ -115,8 +115,72 @@ function initDualFilters() {
   }
 }
 
+function initTimelinePopupCards() {
+  const timelines = document.querySelectorAll(".timeline");
+  if (!timelines.length) return;
+
+  timelines.forEach((timeline) => {
+    const popupZone = timeline.querySelector(".timeline-popup-zone");
+    if (!popupZone) return;
+
+    const triggers = Array.from(timeline.querySelectorAll(".pop-up-card-link[data-popup-target]"));
+    const cards = Array.from(popupZone.querySelectorAll(".pop-up-card[id]"));
+    if (!triggers.length || !cards.length) return;
+
+    let activeTrigger = null;
+
+    const getCardByTrigger = (trigger) => {
+      const targetId = trigger.getAttribute("data-popup-target");
+      if (!targetId) return null;
+      return popupZone.querySelector(`#${targetId}`);
+    };
+
+    const closeAll = () => {
+      cards.forEach((card) => card.classList.remove("is-open"));
+      triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", "false"));
+      activeTrigger = null;
+    };
+
+    const placeCard = (trigger, card) => {
+      if (window.innerWidth <= 1100) return;
+      const anchor = trigger.closest(".timeline-item") || trigger;
+      const zoneRect = popupZone.getBoundingClientRect();
+      const anchorRect = anchor.getBoundingClientRect();
+      const centerY = anchorRect.top + anchorRect.height / 2 - zoneRect.top;
+      card.style.top = `${centerY}px`;
+    };
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const card = getCardByTrigger(trigger);
+        if (!card) return;
+        const isActive = activeTrigger === trigger && card.classList.contains("is-open");
+        closeAll();
+        if (isActive) return;
+        placeCard(trigger, card);
+        card.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+        activeTrigger = trigger;
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!timeline.contains(event.target)) closeAll();
+    });
+
+    window.addEventListener("resize", () => {
+      if (!activeTrigger) return;
+      const activeCard = getCardByTrigger(activeTrigger);
+      if (!activeCard || !activeCard.classList.contains("is-open")) return;
+      placeCard(activeTrigger, activeCard);
+    });
+  });
+}
+
 onReady(() => {
   initDualFilters();
+  initTimelinePopupCards();
   layoutMiscMasonry();
 
   // 图片加载会改变卡片高度：逐张监听并重排

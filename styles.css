@@ -505,8 +505,7 @@ a{ color: inherit; text-decoration: none; }
 */
 #misc-all:checked ~ .filter-tabs label[for="misc-all"],
 #misc-resources:checked ~ .filter-tabs label[for="misc-resources"],
-#misc-projects:checked ~ .filter-tabs label[for="misc-projects"],
-#misc-press:checked ~ .filter-tabs label[for="misc-press"]{
+#misc-projects:checked ~ .filter-tabs label[for="misc-projects"]{
   font-weight: 500;
   opacity: 1;
 }
@@ -517,8 +516,6 @@ a{ color: inherit; text-decoration: none; }
 #misc-projects:checked ~ .filter-panels .misc-card[data-category~="projects"]{ display: block; }
 #misc-resources:checked ~ .filter-panels .misc-card{ display: none; }
 #misc-resources:checked ~ .filter-panels .misc-card[data-category~="resources"]{ display: block; }
-#misc-press:checked ~ .filter-panels .misc-card{ display: none; }
-#misc-press:checked ~ .filter-panels .misc-card[data-category~="press"]{ display: block; }
 
 /* misc
 - page wrapper
@@ -860,7 +857,7 @@ a{ color: inherit; text-decoration: none; }
     --timeline-track-width: 12px;
   
     /* dot 到卡片之间的距离（原来你用 dot-to-logo-gap） */
-    --timeline-dot-to-card-gap: 50px;
+    --timeline-dot-to-card-gap: 30px;
   
     /* subtree 整体右移多少（你原来叫 subtree-offset） */
     --timeline-subtree-offset: 55px;
@@ -872,11 +869,20 @@ a{ color: inherit; text-decoration: none; }
    --timeline-subtree-padding-bottom: 70px;
  
    /* 除 title 外，timeline 内容整体左内边距 */
-   --timeline-content-padding-left: 50px;
+   --timeline-content-padding-left: 0px;
   
     /* 标题字号（卡片内 title） */
     --timeline-title-font-size: 18px;
     --timeline-title-line-height: 1.25;
+    position: relative;
+    padding-right: 0;
+  }
+
+  .timeline--with-popup{
+    --timeline-popup-zone-width: var(--timeline-popup-card-width);
+    --timeline-popup-zone-gap: 50px;
+    --timeline-popup-card-width: 500px;
+    padding-right: calc(var(--timeline-popup-zone-width) + var(--timeline-popup-zone-gap));
   }
   
   .timeline-title{
@@ -975,13 +981,88 @@ a{ color: inherit; text-decoration: none; }
     min-width: 0;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
     margin-left: var(--timeline-dot-to-card-gap);
     margin-top: var(--timeline-card-vertical-gap);
     margin-bottom: var(--timeline-card-vertical-gap);
     padding: 0;
     background: #fff;
+  }
+
+  .pop-up-card-link{
+    display: inline-block;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .timeline--with-popup .timeline-popup-zone{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--timeline-popup-zone-width);
+    pointer-events: none;
+  }
+
+  .timeline--with-popup .timeline-popup-zone .pop-up-card{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--timeline-popup-card-width);
+    min-height: var(--popup-card-min-height, auto);
+    max-height: var(--popup-card-max-height, none);
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-50%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .timeline--with-popup .timeline-popup-zone .pop-up-card.is-open{
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .timeline--with-popup .timeline-popup-zone .pop-up-card .content-text{
+    margin: 0;
+  }
+
+  @media (max-width: 1100px){
+    .timeline--with-popup{
+      padding-right: 0;
+    }
+
+    .timeline--with-popup .timeline-popup-zone{
+      position: static;
+      width: min(100%, 360px);
+      margin: 8px 0 0 calc(var(--timeline-content-padding-left) + var(--timeline-track-width) + var(--timeline-dot-to-card-gap));
+      pointer-events: auto;
+    }
+
+    .timeline--with-popup .timeline-popup-zone .pop-up-card{
+      position: relative;
+      top: auto;
+      transform: none;
+      display: none;
+    }
+
+    .timeline--with-popup .timeline-popup-zone .pop-up-card.is-open{
+      display: block;
+    }
   }
   
   .timeline-card-logo{
@@ -996,19 +1077,22 @@ a{ color: inherit; text-decoration: none; }
   .timeline-card-body{
     flex: 1 1 auto;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding: 0;
   }
   
   .timeline-card-title{
     margin: 0 0 6px;
-    font-size: var(--timeline-title-font-size);
+    font-size: 15px;
     line-height: var(--timeline-title-line-height);
-    font-weight: 500;
+    font-weight: 600;
     color: #111;
   }
   
   .timeline-card-meta{
-    margin: 5px 0 5px;
+    margin: 3px 0 5px;
     font-size: 14px;
     font-weight: 200;
     font-style: italic;
