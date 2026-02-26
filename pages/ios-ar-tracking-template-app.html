@@ -15,7 +15,7 @@
             <li><a href="../index.html">Home</a></li>
             <li><a href="../craft-square.html">CRAFT^2</a></li>
             <li><a href="../publication.html">Publication</a></li>
-            <li><a href="../misc.html" aria-current="page">Misc</a></li>
+            <li><a href="../project.html" aria-current="page">Project</a></li>
             <li><a href="../gallery.html">Gallery</a></li>
             <li><a href="../about.html">About</a></li>
           </ul>
@@ -32,7 +32,9 @@
             <div class="subpage-top">
               <div class="subpage-top-left">
                 <p class="subpage-lede">
-                  Template subpage for the iOS AR Tracking Template App. Replace this text with your project overview.
+                  We developed an iOS App using ARKit and OpenCV framework as a template for customized AR tracked 
+                  visualization and interaction on everyone's portable device. We have been utilized this in 
+                  template in disciplines of engineering and visual art's showcase.
                 </p>
               </div>
 
@@ -62,16 +64,76 @@
           </header>
 
           <section class="subpage-content" aria-label="content">
+
             <br />
             <hr class="content-divider" />
-            <h2 class="content-title">Overview</h2>
+            <h2 class="content-title">Motivation</h2>
 
             <div class="content-prose" style="--content-text-align: start; --content-text-size: 70%;">
               <p class="content-text">
-                This is a placeholder page copied from your existing subpage structure. You can freely update title, media,
-                metadata, and all section content.
+                Wanting to integrate spatial visualizations and interactions into your projects? Finding online AR 
+                design resources be not reliable and want to have a more engineering-level control of your customized 
+                AR? We developed a template iOS AR app by using tracking markers to anchor your assets in your project 
+                space to speed up this process.
               </p>
             </div>
+
+
+
+            <br />
+            <hr class="content-divider" />
+            <h2 class="content-title">Development</h2>
+
+            <div class="content-prose" style="--content-text-align: start; --content-text-size: 70%;">
+              <p class="content-text">
+                The app leverages ARKit for holding the AR session and OpenCV for marker-based spaital pose tracking. 
+                We brigded OpenCV to swift with a thrid party resouce, <a href="https://github.com/r0ml/OpenCV" target="_blank" rel="noreferrer noopener">OpenCV SPM Package</a>. 
+                There are multiple control-able parameters for the tracking pipeline, including pixel buffer size, 
+                marker ids (DICT_ARUCO_MIP_36h12), and filters (one-euro, SLERP, average-window).
+              </p>
+            </div>
+
+            <div class="content-prose" style="--content-text-align: start; --content-text-size: 70%;">
+              <p class="content-text">
+                The raw tracking results are visualzable through a primitive RBG axis on each tracked marker, following 
+                OpenGL and ARKit's coordinate system.
+              </p>
+            </div>
+
+
+
+            <br />
+            <hr class="content-divider" />
+            <h2 class="content-title">Demonstrations</h2>
+
+            <div class="content-prose" style="--content-text-align: start; --content-text-size: 70%;">
+              <p class="content-text">
+                The app leverages ARKit for holding the AR session and OpenCV for marker-based spaital pose tracking. 
+                We brigded OpenCV to swift with a thrid party resouce, OpenCV SPM Package. There are multiple control-able
+                parameters for the tracking pipeline, including pixel buffer size, marker ids (DICT_ARUCO_MIP_36h12), and 
+                filters (one-euro, SLERP, average-window).
+              </p>
+            </div>
+
+            <div class="content-prose" style="--content-text-align: start; --content-text-size: 70%;">
+              <p class="content-text">
+                Chester used this template to develop an stylus tracking demo with iPad and Apple Pencil Pro. He fabricated
+                a tracking cube to acquire the stylus's pose. Read more about the implementation in his
+                <a href="https://stanford.edu/class/ee267/Spring2025/report_pan.pdf" target="_blank" rel="noreferrer noopener"><strong>Stanford EE267 project</strong></a>
+                and the
+                <a href="marker.html"><strong>mARker project</strong></a>.
+              </p>
+            </div>
+
+            <div class="content-prose" style="--content-text-align: start; --content-text-size: 70%;">
+              <p class="content-text">
+                Lilian's project, <em>HYBRIDITY IN IMAGINED FUTURES / A Collab: Mardi Gras x Dominican Republic Carnival</em>, is exhibited
+                in Parsons School of Design. 
+              </p>
+            </div>
+
+
+
           </section>
         </div>
       </article>
