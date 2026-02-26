@@ -98,6 +98,129 @@ function applyMiscDualFilter() {
   requestAnimationFrame(layoutMiscMasonry);
 }
 
+function applyGalleryDualFilter() {
+  const shell = document.querySelector(".filter-shell");
+  if (!shell || !shell.querySelector("#gal-contrib-all")) return;
+  const categoryRadios = shell.querySelectorAll('input[name="gal-category"]');
+  const contributorRadios = shell.querySelectorAll('input[name="gal-contributor"]');
+  const items = shell.querySelectorAll(".filter-panels .gallery-item");
+  const categoryMap = { "gal-all": null, "gal-events": "events", "gal-people": "people", "gal-making": "making" };
+  const contribMap = { "gal-contrib-all": null, "gal-contrib-craft2": "craft2", "gal-contrib-personal": "personal" };
+  const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
+  const categoryId = getChecked(categoryRadios)?.id;
+  const contribId = getChecked(contributorRadios)?.id;
+  const categoryVal = categoryMap[categoryId];
+  const contribVal = contribMap[contribId];
+  items.forEach((el) => {
+    const cat = el.getAttribute("data-category") || "";
+    const contrib = el.getAttribute("data-contributor") || "";
+    const categoryMatch = categoryVal == null || cat.split(/\s+/).includes(categoryVal);
+    const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
+    el.style.display = categoryMatch && contributorMatch ? "block" : "none";
+  });
+  requestAnimationFrame(layoutGalleryMasonry);
+}
+
+function layoutGalleryMasonry() {
+  const grid = document.querySelector(".gallery-grid");
+  if (!grid) return;
+
+  const style = window.getComputedStyle(grid);
+  const gap = parseFloat(style.getPropertyValue("--gallery-gap")) || 0;
+  const containerWidth = grid.clientWidth;
+  if (containerWidth <= 0) return;
+  const minRowHeight = parseFloat(style.getPropertyValue("--gallery-row-min-height")) || 120;
+  const maxRowHeight = parseFloat(style.getPropertyValue("--gallery-row-max-height")) || 210;
+  const rowMin = Math.min(minRowHeight, maxRowHeight);
+  const rowMax = Math.max(minRowHeight, maxRowHeight);
+  const randomRowHeight = () => rowMin + Math.random() * (rowMax - rowMin);
+
+  const oldRows = Array.from(grid.querySelectorAll(".gallery-row"));
+  oldRows.forEach((row) => {
+    Array.from(row.querySelectorAll(".gallery-item")).forEach((item) => grid.appendChild(item));
+    row.remove();
+  });
+
+  const items = Array.from(grid.querySelectorAll(".gallery-item"));
+  items.forEach((item) => {
+    item.style.width = "";
+    item.style.height = "";
+    const img = item.querySelector(".gallery-image");
+    if (img) img.style.height = "";
+    if (!item.dataset.rand) item.dataset.rand = Math.random().toFixed(6);
+  });
+
+  const visibleItems = items
+    .filter((item) => window.getComputedStyle(item).display !== "none")
+    .sort((a, b) => parseFloat(a.dataset.rand) - parseFloat(b.dataset.rand));
+  if (!visibleItems.length) return;
+
+  const rows = [];
+  let currentRow = [];
+  let sumRatios = 0;
+  let currentTargetHeight = randomRowHeight();
+  const targetFill = containerWidth;
+
+  const pushRow = (isLast = false) => {
+    if (!currentRow.length) return;
+    const rowGapTotal = gap * Math.max(0, currentRow.length - 1);
+    const rowHeight = isLast
+      ? currentTargetHeight
+      : (containerWidth - rowGapTotal) / Math.max(sumRatios, 0.01);
+    rows.push({ items: currentRow, rowHeight, isLast });
+    currentRow = [];
+    sumRatios = 0;
+    currentTargetHeight = randomRowHeight();
+  };
+
+  visibleItems.forEach((item) => {
+    const img = item.querySelector("img");
+    const ratio = img && img.naturalWidth > 0 && img.naturalHeight > 0
+      ? img.naturalWidth / img.naturalHeight
+      : 1.25;
+    const nextRatioSum = sumRatios + ratio;
+    const estimatedWidth = nextRatioSum * currentTargetHeight + gap * currentRow.length;
+
+    if (currentRow.length > 0 && estimatedWidth >= targetFill) {
+      pushRow(false);
+    }
+    currentRow.push({ item, ratio });
+    sumRatios += ratio;
+  });
+  pushRow(true);
+
+  const fragment = document.createDocumentFragment();
+  rows.forEach((row) => {
+    const rowEl = document.createElement("div");
+    rowEl.className = "gallery-row";
+
+    const totalWidth = containerWidth - gap * Math.max(0, row.items.length - 1);
+    let usedWidth = 0;
+    row.items.forEach(({ item, ratio }, index) => {
+      const width = row.isLast
+        ? row.rowHeight * ratio
+        : index === row.items.length - 1
+        ? totalWidth - usedWidth
+        : row.rowHeight * ratio;
+      usedWidth += width;
+      item.style.width = `${Math.max(1, width)}px`;
+      const img = item.querySelector(".gallery-image");
+      if (img) img.style.height = `${row.rowHeight}px`;
+      item.style.display = "block";
+      rowEl.appendChild(item);
+    });
+    fragment.appendChild(rowEl);
+  });
+
+  const hiddenItems = items.filter((item) => window.getComputedStyle(item).display === "none");
+  grid.innerHTML = "";
+  grid.appendChild(fragment);
+  hiddenItems.forEach((item) => {
+    item.style.display = "none";
+    grid.appendChild(item);
+  });
+}
+
 function initDualFilters() {
   const shell = document.querySelector(".filter-shell");
   if (!shell) return;
@@ -111,6 +234,12 @@ function initDualFilters() {
     applyMiscDualFilter();
     shell.querySelectorAll('input[name="misc-category"], input[name="misc-contributor"]').forEach((r) => {
       r.addEventListener("change", applyMiscDualFilter);
+    });
+  }
+  if (shell.querySelector("#gal-contrib-all")) {
+    applyGalleryDualFilter();
+    shell.querySelectorAll('input[name="gal-category"], input[name="gal-contributor"]').forEach((r) => {
+      r.addEventListener("change", applyGalleryDualFilter);
     });
   }
 }
@@ -182,6 +311,7 @@ onReady(() => {
   initDualFilters();
   initTimelinePopupCards();
   layoutMiscMasonry();
+  layoutGalleryMasonry();
 
   // 图片加载会改变卡片高度：逐张监听并重排
   document.querySelectorAll(".misc-cards-grid img").forEach((img) => {
@@ -189,12 +319,23 @@ onReady(() => {
     img.addEventListener("load", layoutMiscMasonry, { once: true });
     img.addEventListener("error", layoutMiscMasonry, { once: true });
   });
+  document.querySelectorAll(".gallery-grid img").forEach((img) => {
+    if (img.complete) return;
+    img.addEventListener("load", layoutGalleryMasonry, { once: true });
+    img.addEventListener("error", layoutGalleryMasonry, { once: true });
+  });
 
   // 分类切换（radio）后重排
   document.querySelectorAll('input[name="misc-category"]').forEach((radio) => {
     radio.addEventListener("change", () => requestAnimationFrame(layoutMiscMasonry));
   });
+  document.querySelectorAll('input[name="gal-category"], input[name="gal-contributor"]').forEach((radio) => {
+    radio.addEventListener("change", () => requestAnimationFrame(layoutGalleryMasonry));
+  });
 
   // 窗口尺寸变化重排
-  window.addEventListener("resize", () => requestAnimationFrame(layoutMiscMasonry));
+  window.addEventListener("resize", () => {
+    requestAnimationFrame(layoutMiscMasonry);
+    requestAnimationFrame(layoutGalleryMasonry);
+  });
 });
