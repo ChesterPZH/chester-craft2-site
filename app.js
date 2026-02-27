@@ -1,50 +1,3 @@
-function layoutMiscMasonry() {
-  const grid = document.querySelector(".misc-cards-grid");
-  if (!grid) return;
-
-  const style = window.getComputedStyle(grid);
-  const rowHeight = parseFloat(style.getPropertyValue("grid-auto-rows")) || 10;
-  const rowGap = parseFloat(style.getPropertyValue("row-gap")) || 0;
-  const numColumns = 3; // 固定 3 列
-
-  // 重置所有卡片的 grid 位置
-  const items = Array.from(grid.querySelectorAll(".misc-card"));
-  items.forEach((item) => {
-    item.style.gridColumn = "";
-    item.style.gridRow = "";
-    item.style.gridRowEnd = "";
-  });
-
-  // 只获取可见的卡片（筛选后的结果）
-  const visibleItems = items.filter((item) => {
-    const itemStyle = window.getComputedStyle(item);
-    return itemStyle.display !== "none";
-  });
-
-  // 追踪每列的当前底部位置（以 row 单位）
-  const columnHeights = new Array(numColumns).fill(0);
-
-  // 按 DOM 顺序（从上到下）遍历可见卡片，每张卡片按可见索引计算列位置
-  visibleItems.forEach((item, visibleIndex) => {
-    // 计算应该放在第几列：0, 1, 2, 0, 1, 2...
-    const col = visibleIndex % numColumns;
-
-    // 获取卡片实际高度
-    const h = item.getBoundingClientRect().height;
-    const span = Math.max(1, Math.ceil((h + rowGap) / (rowHeight + rowGap)));
-
-    // 设置列位置
-    item.style.gridColumn = col + 1;
-
-    // 设置行位置：从该列的当前底部开始
-    const startRow = columnHeights[col] + 1;
-    item.style.gridRow = `${startRow} / span ${span}`;
-
-    // 更新该列的底部位置
-    columnHeights[col] = startRow + span - 1;
-  });
-}
-
 function onReady(fn) {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", fn, { once: true });
@@ -95,7 +48,6 @@ function applyMiscDualFilter() {
     const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
     el.style.display = categoryMatch && contributorMatch ? "block" : "none";
   });
-  requestAnimationFrame(layoutMiscMasonry);
 }
 
 function applyGalleryDualFilter() {
@@ -104,7 +56,12 @@ function applyGalleryDualFilter() {
   const categoryRadios = shell.querySelectorAll('input[name="gal-category"]');
   const contributorRadios = shell.querySelectorAll('input[name="gal-contributor"]');
   const items = shell.querySelectorAll(".filter-panels .gallery-item");
-  const categoryMap = { "gal-all": null, "gal-events": "events", "gal-people": "people", "gal-making": "making" };
+  const categoryMap = {
+    "gal-all": null,
+    "gal-visual": "visual",
+    "gal-events": "events",
+    "gal-photo": "photo",
+  };
   const contribMap = { "gal-contrib-all": null, "gal-contrib-craft2": "craft2", "gal-contrib-personal": "personal" };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
   const categoryId = getChecked(categoryRadios)?.id;
@@ -252,7 +209,9 @@ function initTimelinePopupCards() {
     const popupZone = timeline.querySelector(".timeline-popup-zone");
     if (!popupZone) return;
 
-    const triggers = Array.from(timeline.querySelectorAll(".pop-up-card-link[data-popup-target]"));
+    const triggers = Array.from(
+      timeline.querySelectorAll(".pop-up-card-link[data-popup-target]")
+    );
     const cards = Array.from(popupZone.querySelectorAll(".pop-up-card[id]"));
     if (!triggers.length || !cards.length) return;
 
@@ -267,6 +226,10 @@ function initTimelinePopupCards() {
     const closeAll = () => {
       cards.forEach((card) => card.classList.remove("is-open"));
       triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", "false"));
+      // 关闭所有已高亮的 dot
+      timeline
+        .querySelectorAll(".timeline-dot--popup-open")
+        .forEach((dot) => dot.classList.remove("timeline-dot--popup-open"));
       activeTrigger = null;
     };
 
@@ -279,23 +242,43 @@ function initTimelinePopupCards() {
       card.style.top = `${centerY}px`;
     };
 
+    // 改为 hover 展示：hover 区域是整张 timeline-card（logo + 文本）
     triggers.forEach((trigger) => {
-      trigger.addEventListener("click", (event) => {
-        event.stopPropagation();
+      const hoverTarget = trigger.closest(".timeline-card") || trigger;
+
+      // 标记为“有 pop-up 的卡片”，用于样式上的 hover 放大效果
+      hoverTarget.classList.add("timeline-card--with-popup");
+
+      // 关联的 dot：用于样式上区分“有 pop-up 的节点”
+      const item = trigger.closest(".timeline-item");
+      const dot = item ? item.querySelector(".timeline-dot") : null;
+      if (dot) {
+        dot.classList.add("timeline-dot--has-popup");
+      }
+
+      hoverTarget.addEventListener("mouseenter", () => {
         const card = getCardByTrigger(trigger);
         if (!card) return;
-        const isActive = activeTrigger === trigger && card.classList.contains("is-open");
         closeAll();
-        if (isActive) return;
         placeCard(trigger, card);
         card.classList.add("is-open");
         trigger.setAttribute("aria-expanded", "true");
         activeTrigger = trigger;
-      });
-    });
 
-    document.addEventListener("click", (event) => {
-      if (!timeline.contains(event.target)) closeAll();
+        // 当前激活的节点 dot 高亮
+        const currentItem = trigger.closest(".timeline-item");
+        const currentDot = currentItem
+          ? currentItem.querySelector(".timeline-dot--has-popup")
+          : null;
+        if (currentDot) {
+          currentDot.classList.add("timeline-dot--popup-open");
+        }
+      });
+
+      // 鼠标离开 hoverTarget 时立即关闭
+      hoverTarget.addEventListener("mouseleave", () => {
+        closeAll();
+      });
     });
 
     window.addEventListener("resize", () => {
@@ -310,15 +293,8 @@ function initTimelinePopupCards() {
 onReady(() => {
   initDualFilters();
   initTimelinePopupCards();
-  layoutMiscMasonry();
   layoutGalleryMasonry();
 
-  // 图片加载会改变卡片高度：逐张监听并重排
-  document.querySelectorAll(".misc-cards-grid img").forEach((img) => {
-    if (img.complete) return;
-    img.addEventListener("load", layoutMiscMasonry, { once: true });
-    img.addEventListener("error", layoutMiscMasonry, { once: true });
-  });
   document.querySelectorAll(".gallery-grid img").forEach((img) => {
     if (img.complete) return;
     img.addEventListener("load", layoutGalleryMasonry, { once: true });
@@ -326,16 +302,12 @@ onReady(() => {
   });
 
   // 分类切换（radio）后重排
-  document.querySelectorAll('input[name="misc-category"]').forEach((radio) => {
-    radio.addEventListener("change", () => requestAnimationFrame(layoutMiscMasonry));
-  });
   document.querySelectorAll('input[name="gal-category"], input[name="gal-contributor"]').forEach((radio) => {
     radio.addEventListener("change", () => requestAnimationFrame(layoutGalleryMasonry));
   });
 
   // 窗口尺寸变化重排
   window.addEventListener("resize", () => {
-    requestAnimationFrame(layoutMiscMasonry);
     requestAnimationFrame(layoutGalleryMasonry);
   });
 });

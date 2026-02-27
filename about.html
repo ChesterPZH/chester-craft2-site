@@ -47,7 +47,7 @@
             <a href="https://shape.stanford.edu/" target="_blank" rel="noopener noreferrer">Boeing Advanced Researcher Collaboration</a> and 
             <a href="https://shape.stanford.edu/" target="_blank" rel="noopener noreferrer">illimited Lab</a> at UW, where he primarily worked with 
             <a href="https://shape.stanford.edu/" target="_blank" rel="noopener noreferrer">Prof. Richard Wiebe</a> and also had collaborations with 
-            <a href="https://shape.stanford.edu/" target="_blank" rel="noopener noreferrer">Prof. Ed Habtour</a> & 
+            <a href="https://shape.stanford.edu/" target="_blank" rel="noopener noreferrer">Prof. Ed Habtour</a> and 
             <a href="https://shape.stanford.edu/" target="_blank" rel="noopener noreferrer">Prof. Marco Salviato</a>.
             <br><br>
             
@@ -83,13 +83,19 @@
 
 
 
-      <section class="timeline" aria-label="timeline">
+      <!-- Education heading block (content section) -->
+      <section class="about-timeline" aria-label="Education and Affilication">
         <div class="container">
-
           <hr class="content-divider" />
+          <h2 class="content-title">Education and Affilication</h2>
+        </div>
+      </section>
 
-          <h2 class="timeline-title">Education and Affilication</h2>
-          <div class="timeline-tree timeline-tree--main" >
+      <!-- Education timeline block (timeline section only) -->
+      <section class="about-timeline" aria-label="Education timeline">
+        <div class="container">
+          <div class="timeline timeline--with-popup" aria-label="Education and Affilication">
+            <div class="timeline-tree timeline-tree--main">
             <div class="timeline-item timeline-item--main timeline-item--has-subtree">
               <div class="timeline-connector">
                 <div class="timeline-track">
@@ -124,9 +130,16 @@
                       <div class="timeline-card">
                         <img class="timeline-card-logo" src="./assets/logos/shape_logo.png" alt="" loading="lazy" />
                         <div class="timeline-card-body">
-                          <p class="timeline-card-title">SHAPE Lab</p>
-                          <p class="timeline-card-meta">Jan 2024 - Aug 2025 · Department of Mechanical Engineering</p>
-                          <p class="timeline-card-note">Research in accessbile computer interfaces</p>
+                          <button
+                            class="timeline-card-title pop-up-card-link"
+                            type="button"
+                            data-popup-target="popup-card-shape"
+                            aria-expanded="false"
+                          >
+                            SHAPE Lab
+                          </button>
+                          <p class="timeline-card-meta">Jan 2024 - Aug 2025</p>
+                          <p class="timeline-card-note">Accessbile Computer Interfaces</p>
                         </div>
                       </div>
                     </div>
@@ -145,8 +158,8 @@
                         <img class="timeline-card-logo" src="./assets/logos/stf_logo.png" alt="" loading="lazy" />
                         <div class="timeline-card-body">
                           <p class="timeline-card-title">Smart Intelligent Materials Lab</p>
-                          <p class="timeline-card-meta">Sep 2023 - Dec 2023 · Department of Mechanical Engineering</p>
-                          <p class="timeline-card-note">Research in spinner for thrombectomy</p>
+                          <p class="timeline-card-meta">Sep 2023 - Dec 2023</p>
+                          <p class="timeline-card-note">Spinner for Thrombectomy</p>
                         </div>
                       </div>
                     </div>
@@ -187,9 +200,16 @@
                       <div class="timeline-card">
                         <img class="timeline-card-logo" src="./assets/logos/illimited_logo.png" alt="" loading="lazy" />
                         <div class="timeline-card-body">
-                          <p class="timeline-card-title">illimited Lab</p>
-                          <p class="timeline-card-meta">Sep 2022 - Mar 2023 · Department of Aero & Astro</p>
-                          <p class="timeline-card-note">Research in 3D printed spider web structures</p>
+                          <button
+                            class="timeline-card-title pop-up-card-link"
+                            type="button"
+                            data-popup-target="popup-card-illimited"
+                            aria-expanded="false"
+                          >
+                            illimited Lab
+                          </button>
+                          <p class="timeline-card-meta">Sep 2022 - Mar 2023</p>
+                          <p class="timeline-card-note">3D Printed Spider Web Structures</p>
                         </div>
                       </div>
                     </div>
@@ -208,8 +228,8 @@
                         <img class="timeline-card-logo" src="./assets/logos/barc_logo.png" alt="" loading="lazy" />
                         <div class="timeline-card-body">
                           <p class="timeline-card-title">Boeing Advanced Research Collaboration</p>
-                          <p class="timeline-card-meta">Jun 2022 - Mar 2023 · Boeing Advanced Research Collaboration</p>
-                          <p class="timeline-card-note">Reserach in additively manufactured polymer structures</p>
+                          <p class="timeline-card-meta">Jun 2022 - Mar 2023</p>
+                          <p class="timeline-card-note">Additively Manufactured Polymer Structures</p>
                         </div>
                       </div>
                     </div>
@@ -217,13 +237,64 @@
                 </div>
               </div>
             </div>
+            <!-- close timeline-tree timeline-tree--main -->
+            </div>
+            <aside class="timeline-popup-zone" aria-live="polite" aria-label="Timeline popup cards">
+              <div
+                class="pop-up-card"
+                id="popup-card-shape"
+                aria-label="SHAPE Lab details"
+              >
+                <img
+                  class="pop-up-card-image"
+                  src="./assets/logos/shape_logo.png"
+                  alt="SHAPE Lab"
+                  loading="lazy"
+                />
+                <p class="pop-up-card-text">
+                  SHAPE Lab focuses on shape-changing interfaces, haptics, and
+                  novel interactive devices. Chester worked on accessible computer
+                  interfaces and spatial computing projects as a graduate student
+                  researcher.
+                </p>
+              </div>
+
+              <div
+                class="pop-up-card"
+                id="popup-card-illimited"
+                aria-label="illimited Lab details"
+              >
+                <img
+                  class="pop-up-card-image"
+                  src="./assets/logos/illimited_logo.png"
+                  alt="illimited Lab"
+                  loading="lazy"
+                />
+                <p class="pop-up-card-text">
+                  illimited Lab explores architected materials and bio-inspired
+                  structures. Chester contributed to research on 3D-printed spider
+                  web structures and mechanical characterization of novel lattice
+                  designs.
+                </p>
+              </div>
+            </aside>
           </div>
+        </div>
+      </section>
 
-
+      <!-- Work heading block (content section) -->
+      <section class="about-timeline" aria-label="Work and Employment">
+        <div class="container">
           <hr class="content-divider" />
+          <h2 class="content-title">Work and Employment</h2>
+        </div>
+      </section>
 
-          <h2 class="timeline-title">Work and Employment</h2>
-          <div class="timeline-tree timeline-tree--main">
+      <!-- Work timeline block (timeline section only) -->
+      <section class="about-timeline" aria-label="Work timeline">
+        <div class="container">
+          <div class="timeline" aria-label="Work and Employment">
+            <div class="timeline-tree timeline-tree--main">
             <div class="timeline-item timeline-item--main">
               <div class="timeline-connector">
                 <div class="timeline-track">
@@ -343,10 +414,7 @@
                   </div>
                 </div>
               </div>
-            </div>
           </div>
-
-
         </div>
       </section>
 
@@ -354,6 +422,21 @@
 
     <footer class="site-footer">
       <div class="container">
+        <div>
+          <a class="footer-contact" href="mailto:chester052519@gmail.com">
+            <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+            chester052519@gmail.com
+          </a>
+          <a
+            class="footer-contact"
+            href="https://www.youtube.com/channel/UCktWEdfoz2RzISL2t-Myruw"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+            Media
+          </a>
+        </div>
         <small>Chester(Zhaohan) Pan & CRAFT Square © 2024 - 2026. All Rights Reserved.</small>
       </div>
     </footer>
