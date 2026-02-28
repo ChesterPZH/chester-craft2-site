@@ -320,8 +320,8 @@ a{ color: inherit; text-decoration: none; }
 /* =======================================================================
    Timeline（通用组件）
    - 左侧轨道 + 竖线 + dot + 右侧卡片
-   - 支持 main tree / subtree 结构
-   - 通过 .timeline--with-popup + .timeline-popup-zone 支持 hover 弹出卡片
+  - 支持主树与子树结构（结构驱动）
+  - 通过 .timeline-popups 支持 hover 弹出卡片
    ======================================================================= */
 
 /* Timeline — dot 永远整行居中（50%），竖线自动上下延伸，支持 subtree */
@@ -341,13 +341,13 @@ a{ color: inherit; text-decoration: none; }
   --timeline-dot-to-card-gap: 30px;
 
   /* subtree 整体右移多少（你原来叫 subtree-offset） */
-  --timeline-subtree-offset: 70px;
+  --timeline-children-offset: 70px;
 
   /* 卡片上下间距（作用在卡片本体，不影响线条轨道计算） */
   --timeline-card-vertical-gap: 10px;
 
   /* subtree 底部内边距 */
-  --timeline-subtree-padding-bottom: 70px;
+  --timeline-children-padding-bottom: 70px;
 
   /* 除 title 外，timeline 内容整体左内边距 */
   --timeline-content-padding-left: 0px;
@@ -360,14 +360,14 @@ a{ color: inherit; text-decoration: none; }
   padding-right: 0;
 }
 
-.timeline--with-popup{
-  --timeline-popup-zone-width: var(--timeline-popup-card-width);
-  --timeline-popup-zone-gap: 50px;
+.timeline:has(> .timeline-popups){
+  --timeline-popups-width: var(--timeline-popup-card-width);
+  --timeline-popups-gap: 50px;
   --timeline-popup-card-width: 500px;
-  padding-right: calc(var(--timeline-popup-zone-width) + var(--timeline-popup-zone-gap));
+  padding-right: calc(var(--timeline-popups-width) + var(--timeline-popups-gap));
 }
 
-.timeline-tree{
+.timeline-list{
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -425,16 +425,12 @@ a{ color: inherit; text-decoration: none; }
 }
 
 /* 第一项不画上半段；最后一项不画下半段 */
-.timeline-tree > .timeline-item:first-child > .timeline-row .timeline-track::before{
+.timeline-list > .timeline-item:first-child > .timeline-row .timeline-track::before{
   display: none;
 }
-.timeline-tree > .timeline-item:last-child > .timeline-row .timeline-track::after{
+.timeline-list > .timeline-item:last-child > .timeline-row .timeline-track::after{
   display: none;
 }
-
-/* 旧 connector 结构保留，但不参与绘制（和你原来一致） */
-.timeline-connector{ display: none; }
-.timeline-segment{ display: none; }
 
 /* ✅ dot：永远整行居中（几何形状，只负责位置和尺寸，不直接上色） */
 .timeline-dot{
@@ -451,35 +447,35 @@ a{ color: inherit; text-decoration: none; }
   transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* main tree 默认 dot：深灰描边，内部镂空（白底） */
-.timeline-tree--main .timeline-dot{
+/* 主树默认 dot：深灰描边，内部镂空（白底） */
+.timeline-dot{
   background: #fff;
   border-color: #4d4d4d;
 }
 
-/* subtree 默认 dot：浅灰描边（与竖线同色），内部镂空（白底） */
-.timeline-tree--sub .timeline-dot{
+/* 子树 dot：浅灰描边（与竖线同色），内部镂空（白底） */
+.timeline-children .timeline-dot{
   background: #fff;
   border-color: #969696;
 }
 
-/* 能触发 pop-up 的节点：实心填充，颜色与各自描边色一致 */
-.timeline-tree--main .timeline-dot.timeline-dot--has-popup{
+/* 能触发 pop-up 的节点：仅当前 item 直属卡片带 target 才实心 */
+.timeline-item:has(> .timeline-row .timeline-card[data-popup-target]) .timeline-dot{
   background: #4d4d4d;
   border-color: #4d4d4d;
 }
 
-.timeline-tree--sub .timeline-dot.timeline-dot--has-popup{
+.timeline-children .timeline-item:has(> .timeline-row .timeline-card[data-popup-target]) .timeline-dot{
   background: #969696;
   border-color: #969696;
 }
 
 /* 当前弹出卡片打开时的高亮状态：ring 颜色与各自 dot 颜色一致，视觉效果对称 */
-.timeline-tree--main .timeline-dot.timeline-dot--popup-open{
+.timeline-dot.timeline-dot--popup-open{
   box-shadow: 0 0 0 3px #4d4d4d;
 }
 
-.timeline-tree--sub .timeline-dot.timeline-dot--popup-open{
+.timeline-children .timeline-dot.timeline-dot--popup-open{
   box-shadow: 0 0 0 3px #969696;
 }
 
@@ -500,33 +496,21 @@ a{ color: inherit; text-decoration: none; }
   transition: transform 0.18s ease;
 }
 
-/* 仅带 pop-up 的时间轴卡片增加轻微弹出效果 */
-.timeline-card.timeline-card--with-popup:hover{
+/* 带 pop-up 的时间轴卡片增加轻微弹出效果 */
+.timeline-card[data-popup-target]:hover{
   transform: scale(1.02);
 }
 
-.pop-up-card-link{
-  display: inline-block;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-  cursor: default;
-  text-decoration: none;
-}
-
-.timeline--with-popup .timeline-popup-zone{
+.timeline:has(> .timeline-popups) .timeline-popups{
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  width: var(--timeline-popup-zone-width);
+  width: var(--timeline-popups-width);
   pointer-events: none;
 }
 
-.timeline--with-popup .timeline-popup-zone .pop-up-card{
+.timeline:has(> .timeline-popups) .timeline-popups .pop-up-card{
   position: absolute;
   left: 0;
   top: 0;
@@ -548,13 +532,13 @@ a{ color: inherit; text-decoration: none; }
   z-index: 5;
 }
 
-.timeline--with-popup .timeline-popup-zone .pop-up-card.is-open{
+.timeline:has(> .timeline-popups) .timeline-popups .pop-up-card.is-open{
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-.timeline--with-popup .timeline-popup-zone .pop-up-card-image{
+.timeline:has(> .timeline-popups) .timeline-popups .pop-up-card-image{
   padding: 10px 0 0;
   width: 96%;
   height: auto;
@@ -562,7 +546,7 @@ a{ color: inherit; text-decoration: none; }
   object-fit: contain;
 }
 
-.timeline--with-popup .timeline-popup-zone .pop-up-card-text{
+.timeline:has(> .timeline-popups) .timeline-popups .pop-up-card-text{
   margin: 0;
   width: 100%;
   text-align: left;
@@ -573,25 +557,25 @@ a{ color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 1100px){
-  .timeline--with-popup{
+  .timeline:has(> .timeline-popups){
     padding-right: 0;
   }
 
-  .timeline--with-popup .timeline-popup-zone{
+  .timeline:has(> .timeline-popups) .timeline-popups{
     position: static;
     width: min(100%, 360px);
     margin: 8px 0 0 calc(var(--timeline-content-padding-left) + var(--timeline-track-width) + var(--timeline-dot-to-card-gap));
     pointer-events: auto;
   }
 
-  .timeline--with-popup .timeline-popup-zone .pop-up-card{
+  .timeline:has(> .timeline-popups) .timeline-popups .pop-up-card{
     position: relative;
     top: auto;
     transform: none;
     display: none;
   }
 
-  .timeline--with-popup .timeline-popup-zone .pop-up-card.is-open{
+  .timeline:has(> .timeline-popups) .timeline-popups .pop-up-card.is-open{
     display: block;
   }
 }
@@ -639,26 +623,26 @@ a{ color: inherit; text-decoration: none; }
   line-height: 1.45;
 }
 
-/* subtree 容器：整体向右偏移 */
-.timeline-subtree{
+/* 子树容器：整体向右偏移 */
+.timeline-children{
   flex: 1 1 auto;
   min-width: 0;
-  margin-left: var(--timeline-subtree-offset);
-  padding: 0 0 var(--timeline-subtree-padding-bottom);
+  margin-left: var(--timeline-children-offset);
+  padding: 0 0 var(--timeline-children-padding-bottom);
   border-left: none;
   position: relative;
 }
 
 /* ✅ main tree 的主干在 subtree 区域持续向下（避免 subtree 视觉截断）
    这条线的位置 = 主干轨道中心（row 内）映射到 subtree 内部坐标 */
-.timeline-tree--main
-  > .timeline-item--has-subtree:not(:last-child)
-  > .timeline-subtree::before{
+.timeline-list
+  > .timeline-item:has(> .timeline-children):not(:last-child)
+  > .timeline-children::before{
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  left: calc(-1 * var(--timeline-subtree-offset) + (var(--timeline-track-width) / 2) - (var(--timeline-line-width) / 2));
+  left: calc(-1 * var(--timeline-children-offset) + (var(--timeline-track-width) / 2) - (var(--timeline-line-width) / 2));
   width: var(--timeline-line-width);
   background: var(--timeline-line-color);
 }
@@ -1496,6 +1480,9 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .site-footer .container{
+  width: 100%;
+  margin: 0;
+  padding: 0 150px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -1537,6 +1524,10 @@ a{ color: inherit; text-decoration: none; }
 @media (max-width: 900px){
   .container{
     width: min(950px, 100% - 32px);
+  }
+
+  .site-footer .container{
+    padding: 0 20px;
   }
 
   .nav-shell{

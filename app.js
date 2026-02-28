@@ -206,11 +206,11 @@ function initTimelinePopupCards() {
   if (!timelines.length) return;
 
   timelines.forEach((timeline) => {
-    const popupZone = timeline.querySelector(".timeline-popup-zone");
+    const popupZone = timeline.querySelector(".timeline-popups");
     if (!popupZone) return;
 
     const triggers = Array.from(
-      timeline.querySelectorAll(".pop-up-card-link[data-popup-target]")
+      timeline.querySelectorAll(".timeline-card[data-popup-target]")
     );
     const cards = Array.from(popupZone.querySelectorAll(".pop-up-card[id]"));
     if (!triggers.length || !cards.length) return;
@@ -239,22 +239,19 @@ function initTimelinePopupCards() {
       const zoneRect = popupZone.getBoundingClientRect();
       const anchorRect = anchor.getBoundingClientRect();
       const centerY = anchorRect.top + anchorRect.height / 2 - zoneRect.top;
-      card.style.top = `${centerY}px`;
+
+      // 将卡片限制在 popup zone 的纵向范围内：
+      // card 的 CSS 用 transform: translateY(-50%)，所以 top 指向卡片中心。
+      // 确保卡片上边不超出 zone 顶部，下边不超出 zone 底部。
+      const halfCard = card.offsetHeight / 2;
+      const zoneHeight = popupZone.offsetHeight;
+      const clampedTop = Math.max(halfCard, Math.min(centerY, zoneHeight - halfCard));
+      card.style.top = `${clampedTop}px`;
     };
 
     // 改为 hover 展示：hover 区域是整张 timeline-card（logo + 文本）
     triggers.forEach((trigger) => {
       const hoverTarget = trigger.closest(".timeline-card") || trigger;
-
-      // 标记为“有 pop-up 的卡片”，用于样式上的 hover 放大效果
-      hoverTarget.classList.add("timeline-card--with-popup");
-
-      // 关联的 dot：用于样式上区分“有 pop-up 的节点”
-      const item = trigger.closest(".timeline-item");
-      const dot = item ? item.querySelector(".timeline-dot") : null;
-      if (dot) {
-        dot.classList.add("timeline-dot--has-popup");
-      }
 
       hoverTarget.addEventListener("mouseenter", () => {
         const card = getCardByTrigger(trigger);
@@ -268,7 +265,7 @@ function initTimelinePopupCards() {
         // 当前激活的节点 dot 高亮
         const currentItem = trigger.closest(".timeline-item");
         const currentDot = currentItem
-          ? currentItem.querySelector(".timeline-dot--has-popup")
+          ? currentItem.querySelector(".timeline-dot")
           : null;
         if (currentDot) {
           currentDot.classList.add("timeline-dot--popup-open");
