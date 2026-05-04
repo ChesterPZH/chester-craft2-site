@@ -749,6 +749,7 @@ a{ color: inherit; text-decoration: none; }
 #pub-contrib-all:checked ~ .filter-tabs--contributor label[for="pub-contrib-all"],
 #pub-contrib-craft2:checked ~ .filter-tabs--contributor label[for="pub-contrib-craft2"],
 #pub-contrib-personal:checked ~ .filter-tabs--contributor label[for="pub-contrib-personal"],
+#pub-contrib-colab:checked ~ .filter-tabs--contributor label[for="pub-contrib-colab"],
 #misc-contrib-all:checked ~ .filter-tabs--contributor label[for="misc-contrib-all"],
 #misc-contrib-craft2:checked ~ .filter-tabs--contributor label[for="misc-contrib-craft2"],
 #misc-contrib-personal:checked ~ .filter-tabs--contributor label[for="misc-contrib-personal"],
@@ -763,6 +764,7 @@ a{ color: inherit; text-decoration: none; }
 /* publication > filter-category (active states) */
 #pub-all:checked ~ .filter-tabs label[for="pub-all"],
 #pub-xr:checked ~ .filter-tabs label[for="pub-xr"],
+#pub-ai:checked ~ .filter-tabs label[for="pub-ai"],
 #pub-haptics:checked ~ .filter-tabs label[for="pub-haptics"],
 #pub-access:checked ~ .filter-tabs label[for="pub-access"]{
   font-weight: 500;
@@ -776,6 +778,8 @@ a{ color: inherit; text-decoration: none; }
 #pub-all:checked ~ .filter-panels .pub-item{ display: grid; }
 #pub-xr:checked ~ .filter-panels .pub-item{ display: none; }
 #pub-xr:checked ~ .filter-panels .pub-item[data-category~="xr"]{ display: grid; }
+#pub-ai:checked ~ .filter-panels .pub-item{ display: none; }
+#pub-ai:checked ~ .filter-panels .pub-item[data-category~="ai"]{ display: grid; }
 #pub-haptics:checked ~ .filter-panels .pub-item{ display: none; }
 #pub-haptics:checked ~ .filter-panels .pub-item[data-category~="haptics"]{ display: grid; }
 #pub-access:checked ~ .filter-panels .pub-item{ display: none; }

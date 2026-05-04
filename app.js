@@ -12,8 +12,13 @@ function applyPublicationDualFilter() {
   const categoryRadios = shell.querySelectorAll('input[name="pub-category"]');
   const contributorRadios = shell.querySelectorAll('input[name="pub-contributor"]');
   const items = shell.querySelectorAll(".filter-panels .pub-item");
-  const categoryMap = { "pub-all": null, "pub-xr": "xr", "pub-haptics": "haptics", "pub-access": "access" };
-  const contribMap = { "pub-contrib-all": null, "pub-contrib-craft2": "craft2", "pub-contrib-personal": "personal" };
+  const categoryMap = { "pub-all": null, "pub-xr": "xr", "pub-ai": "ai", "pub-haptics": "haptics", "pub-access": "access" };
+  const contribMap = {
+    "pub-contrib-all": null,
+    "pub-contrib-craft2": "craft2",
+    "pub-contrib-personal": "personal",
+    "pub-contrib-colab": "colab",
+  };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
   const categoryId = getChecked(categoryRadios)?.id;
   const contribId = getChecked(contributorRadios)?.id;
