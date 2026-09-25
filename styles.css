@@ -732,6 +732,11 @@ a{ color: inherit; text-decoration: none; }
 /* (keep: no divider for labels) */
 .filter-tabs label + label::before{ content: none; }
 
+/* standalone "Posters" tab: pinned to the far right of the category row */
+.filter-tabs .filter-tab--posters{
+  margin-left: auto;
+}
+
 /* contributor bar: inverted style (white bg, black text, rectangular black border) */
 .filter-tabs--contributor{
   margin-top: 12px;
@@ -870,7 +875,8 @@ a{ color: inherit; text-decoration: none; }
 #gal-all:checked ~ .filter-tabs label[for="gal-all"],
 #gal-visual:checked ~ .filter-tabs label[for="gal-visual"],
 #gal-events:checked ~ .filter-tabs label[for="gal-events"],
-#gal-photo:checked ~ .filter-tabs label[for="gal-photo"]{
+#gal-photo:checked ~ .filter-tabs label[for="gal-photo"],
+#gal-posters:checked ~ .filter-tabs label[for="gal-posters"]{
   font-weight: 500;
   opacity: 1;
 }
@@ -962,6 +968,9 @@ a{ color: inherit; text-decoration: none; }
   --gallery-gap: 15px;
   --gallery-row-min-height: 200px; /* 可调：最小行高（px） */
   --gallery-row-max-height: 225px; /* 可调：最大行高（px） */
+  /* Posters 模式使用独立的、固定的大行高（浮动区间很小） */
+  --gallery-poster-row-min-height: 460px;
+  --gallery-poster-row-max-height: 480px;
   display: block;
   width: 100%;
 }

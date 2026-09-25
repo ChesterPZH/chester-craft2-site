@@ -66,6 +66,7 @@ function applyGalleryDualFilter() {
     "gal-visual": "visual",
     "gal-events": "events",
     "gal-photo": "photo",
+    "gal-posters": "posters",
   };
   const contribMap = { "gal-contrib-all": null, "gal-contrib-craft2": "craft2", "gal-contrib-personal": "personal" };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
@@ -73,12 +74,23 @@ function applyGalleryDualFilter() {
   const contribId = getChecked(contributorRadios)?.id;
   const categoryVal = categoryMap[categoryId];
   const contribVal = contribMap[contribId];
+  const postersMode = categoryVal === "posters";
   items.forEach((el) => {
     const cat = el.getAttribute("data-category") || "";
     const contrib = el.getAttribute("data-contributor") || "";
-    const categoryMatch = categoryVal == null || cat.split(/\s+/).includes(categoryVal);
-    const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
-    el.style.display = categoryMatch && contributorMatch ? "block" : "none";
+    const catList = cat.split(/\s+/);
+    const isPoster = catList.includes("posters");
+    let show;
+    if (postersMode) {
+      // Posters 是独立分类：只显示 poster 项
+      show = isPoster;
+    } else {
+      // 其它任何分类（含 All）都不显示 poster 项
+      const categoryMatch = categoryVal == null || catList.includes(categoryVal);
+      const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
+      show = !isPoster && categoryMatch && contributorMatch;
+    }
+    el.style.display = show ? "block" : "none";
   });
   requestAnimationFrame(layoutGalleryMasonry);
 }
@@ -87,12 +99,18 @@ function layoutGalleryMasonry() {
   const grid = document.querySelector(".gallery-grid");
   if (!grid) return;
 
+  // 是否处于独立的 Posters 模式（由分类单选钮决定）
+  const postersMode = !!document.querySelector("#gal-posters:checked");
+
   const style = window.getComputedStyle(grid);
   const gap = parseFloat(style.getPropertyValue("--gallery-gap")) || 0;
   const containerWidth = grid.clientWidth;
   if (containerWidth <= 0) return;
-  const minRowHeight = parseFloat(style.getPropertyValue("--gallery-row-min-height")) || 120;
-  const maxRowHeight = parseFloat(style.getPropertyValue("--gallery-row-max-height")) || 210;
+  // Posters 模式使用独立的、固定的大行高计算器
+  const minVar = postersMode ? "--gallery-poster-row-min-height" : "--gallery-row-min-height";
+  const maxVar = postersMode ? "--gallery-poster-row-max-height" : "--gallery-row-max-height";
+  const minRowHeight = parseFloat(style.getPropertyValue(minVar)) || (postersMode ? 460 : 120);
+  const maxRowHeight = parseFloat(style.getPropertyValue(maxVar)) || (postersMode ? 480 : 210);
   const rowMin = Math.min(minRowHeight, maxRowHeight);
   const rowMax = Math.max(minRowHeight, maxRowHeight);
   const randomRowHeight = () => rowMin + Math.random() * (rowMax - rowMin);
@@ -200,8 +218,35 @@ function initDualFilters() {
   }
   if (shell.querySelector("#gal-contrib-all")) {
     applyGalleryDualFilter();
-    shell.querySelectorAll('input[name="gal-category"], input[name="gal-contributor"]').forEach((r) => {
-      r.addEventListener("change", applyGalleryDualFilter);
+    const postersRadio = shell.querySelector("#gal-posters");
+    const catRadios = shell.querySelectorAll('input[name="gal-category"]');
+    const contribRadios = shell.querySelectorAll('input[name="gal-contributor"]');
+    const anyContribChecked = () => Array.from(contribRadios).some((c) => c.checked);
+
+    catRadios.forEach((r) => {
+      r.addEventListener("change", () => {
+        if (!r.checked) return;
+        if (r.id === "gal-posters") {
+          // Posters stands alone: drop any contributor selection.
+          contribRadios.forEach((c) => (c.checked = false));
+        } else if (!anyContribChecked()) {
+          // Leaving Posters: restore the default contributor selection.
+          const all = shell.querySelector("#gal-contrib-all");
+          if (all) all.checked = true;
+        }
+        applyGalleryDualFilter();
+      });
+    });
+
+    contribRadios.forEach((r) => {
+      r.addEventListener("change", () => {
+        // Selecting a contributor exits the standalone Posters mode.
+        if (r.checked && postersRadio && postersRadio.checked) {
+          const all = shell.querySelector("#gal-all");
+          if (all) all.checked = true;
+        }
+        applyGalleryDualFilter();
+      });
     });
   }
 }
