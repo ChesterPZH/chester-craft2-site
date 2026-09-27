@@ -732,10 +732,68 @@ a{ color: inherit; text-decoration: none; }
 /* (keep: no divider for labels) */
 .filter-tabs label + label::before{ content: none; }
 
-/* standalone "Posters" tab: pinned to the far right of the category row */
-.filter-tabs .filter-tab--posters{
-  margin-left: auto;
+/* foldable single-select row: only the active tab shows until the chevron opens the rest */
+.filter-fold-toggle{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
 }
+.filter-fold-toggle ion-icon{ transition: transform 0.2s ease; }
+.filter-tabs--fold.is-open .filter-fold-toggle ion-icon{ transform: rotate(90deg); }
+.filter-fold-slot{ display: flex; }
+.filter-fold-pool{
+  display: none;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: var(--filter-tab-gap);
+  /* align under the static tab, past the toggle */
+  padding-left: calc(36px + var(--filter-tab-gap));
+}
+.filter-tabs--fold.is-open .filter-fold-pool{ display: flex; }
+
+/* category / team rows stacked; rows use display:contents so their toggle / slot / pool
+   become cells of one shell grid: [toggle][static tab][pool opens to the right] */
+.filter-shell:has(.filter-tabs--fold){
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  /* row 3 (1fr) soaks up any extra height of an open pool,
+     so the toggle / static column never gets pushed apart */
+  grid-template-rows: auto auto 1fr auto;
+  column-gap: 8px;
+  align-items: start;
+}
+.filter-shell .filter-tabs--fold{ display: contents; }
+.filter-tabs--fold .filter-fold-toggle{ grid-column: 1; }
+.filter-tabs--fold .filter-fold-slot{ grid-column: 2; }
+.filter-tabs--fold .filter-fold-pool{
+  grid-column: 3;
+  flex-basis: auto;
+  padding-left: 0;
+  row-gap: 12px; /* same vertical rhythm as the category / team rows */
+}
+.filter-tabs--fold:not(.filter-tabs--contributor) > *{ grid-row: 1; }
+.filter-tabs--fold:not(.filter-tabs--contributor) .filter-fold-pool{ grid-row: 1 / 4; }
+.filter-tabs--contributor.filter-tabs--fold > *{ grid-row: 2; margin-top: 12px; }
+.filter-tabs--contributor.filter-tabs--fold .filter-fold-pool{ grid-row: 2 / 4; }
+.filter-shell:has(.filter-tabs--fold) > .filter-panels{
+  grid-row: 4;
+  grid-column: 1 / -1;
+}
+
+/* hover: unselected tab darkens halfway between gray (0.6) and black (1); the selected tab is untouched
+   (its id-based :checked rule outranks this) */
+.filter-tabs label,
+.craft2-tabs label{ transition: opacity 0.15s ease; }
+.filter-tabs label:hover,
+.craft2-tabs label:hover{ opacity: 0.8; }
 
 /* contributor bar: inverted style (white bg, black text, rectangular black border) */
 .filter-tabs--contributor{
@@ -744,7 +802,7 @@ a{ color: inherit; text-decoration: none; }
 .filter-tabs--contributor label{
   /* team 栏样式整体跟随上面的 category：
      默认用更浅的灰色底，选中时用纯黑 */
-  background: #696969;
+  background: #000;
   color: #fff;
   border: none;
   opacity: 0.6;
@@ -754,7 +812,6 @@ a{ color: inherit; text-decoration: none; }
 #pub-contrib-all:checked ~ .filter-tabs--contributor label[for="pub-contrib-all"],
 #pub-contrib-craft2:checked ~ .filter-tabs--contributor label[for="pub-contrib-craft2"],
 #pub-contrib-personal:checked ~ .filter-tabs--contributor label[for="pub-contrib-personal"],
-#pub-contrib-colab:checked ~ .filter-tabs--contributor label[for="pub-contrib-colab"],
 #misc-contrib-all:checked ~ .filter-tabs--contributor label[for="misc-contrib-all"],
 #misc-contrib-craft2:checked ~ .filter-tabs--contributor label[for="misc-contrib-craft2"],
 #misc-contrib-personal:checked ~ .filter-tabs--contributor label[for="misc-contrib-personal"],
@@ -769,6 +826,8 @@ a{ color: inherit; text-decoration: none; }
 /* publication > filter-category (active states) */
 #pub-all:checked ~ .filter-tabs label[for="pub-all"],
 #pub-xr:checked ~ .filter-tabs label[for="pub-xr"],
+#pub-cv:checked ~ .filter-tabs label[for="pub-cv"],
+#pub-robot:checked ~ .filter-tabs label[for="pub-robot"],
 #pub-ai:checked ~ .filter-tabs label[for="pub-ai"],
 #pub-haptics:checked ~ .filter-tabs label[for="pub-haptics"],
 #pub-access:checked ~ .filter-tabs label[for="pub-access"]{
@@ -783,6 +842,10 @@ a{ color: inherit; text-decoration: none; }
 #pub-all:checked ~ .filter-panels .pub-item{ display: grid; }
 #pub-xr:checked ~ .filter-panels .pub-item{ display: none; }
 #pub-xr:checked ~ .filter-panels .pub-item[data-category~="xr"]{ display: grid; }
+#pub-cv:checked ~ .filter-panels .pub-item{ display: none; }
+#pub-cv:checked ~ .filter-panels .pub-item[data-category~="cv"]{ display: grid; }
+#pub-robot:checked ~ .filter-panels .pub-item{ display: none; }
+#pub-robot:checked ~ .filter-panels .pub-item[data-category~="robot"]{ display: grid; }
 #pub-ai:checked ~ .filter-panels .pub-item{ display: none; }
 #pub-ai:checked ~ .filter-panels .pub-item[data-category~="ai"]{ display: grid; }
 #pub-haptics:checked ~ .filter-panels .pub-item{ display: none; }
@@ -797,27 +860,50 @@ a{ color: inherit; text-decoration: none; }
 */
 .pub-item{
   display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 30px;
-  align-items: start;
-  margin-bottom: 50px;
+  grid-template-columns: 215px 1fr;
+  gap: 40px;
+  align-items: stretch; /* body fills the row height, so its bottom = the row's bottom */
+  margin-bottom: 70px;
   color: inherit;
 }
 
 /* - pub-tn-figure */
 .pub-thumb{
-  width: 160px;
-  height: 110px;
+  width: 215px;
+  height: 135px;
   object-fit: cover;
   display: block;
+  align-self: start;
 }
+
+/* thumbs with a hover animation: white play badge in the bottom-left of the still frame */
+.thumb-hover-wrap{
+  position: relative;
+  display: block;
+  align-self: start;
+  width: fit-content;
+}
+.thumb-hover-badge{
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  font-size: 22px;
+  color: #fff;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.thumb-hover-wrap:hover .thumb-hover-badge{ opacity: 0; }
 
 /* - pub-body + pub-text/meta/year */
+/* body stretches to the full row; links are absolutely pinned to its bottom,
+   so nothing in the text above (margins, extra lines) can push them */
 .pub-body{
   margin: 0;
+  position: relative;
 }
 
-.pub-text{
+.pub-text,
+.pub-text-sup{
   margin: 0;
   font-size: 15px;
   font-weight: 200;
@@ -825,28 +911,25 @@ a{ color: inherit; text-decoration: none; }
   color: #111;
 }
 
+/* supplementary line under pub-text (e.g. equal contributions) */
+.pub-text-sup{ margin-top: 8px; }
+
 .pub-text a{ text-decoration: none; }
 
-/* - pub-meta */
-.pub-meta{
-  margin: 20px 0 0;
-  font-size: 14px;
-  font-weight: 200;
-  opacity: 0.85;
-}
-
-/* publication
-- pub-linkset (outer-page link row)
-- pub-term (outer-page single link)
-*/
-.pub-linkset{
-  display: inline-flex;
+/* - pub-links (outer-page link row) > pub-link */
+.pub-links{
+  display: flex;
   flex-wrap: wrap;
   gap: 16px;
   align-items: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.85;
 }
 
-.pub-term{
+.pub-link{
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -859,7 +942,7 @@ a{ color: inherit; text-decoration: none; }
   text-underline-offset: 3px;
 }
 
-.pub-term ion-icon{ font-size: 17px; }
+.pub-link ion-icon{ font-size: 17px; }
 
 /* =======================================================================
    Misc
@@ -875,8 +958,7 @@ a{ color: inherit; text-decoration: none; }
 #gal-all:checked ~ .filter-tabs label[for="gal-all"],
 #gal-visual:checked ~ .filter-tabs label[for="gal-visual"],
 #gal-events:checked ~ .filter-tabs label[for="gal-events"],
-#gal-photo:checked ~ .filter-tabs label[for="gal-photo"],
-#gal-posters:checked ~ .filter-tabs label[for="gal-posters"]{
+#gal-photo:checked ~ .filter-tabs label[for="gal-photo"]{
   font-weight: 500;
   opacity: 1;
 }
@@ -941,18 +1023,18 @@ a{ color: inherit; text-decoration: none; }
 /* - misc-text */
 .misc-card-body{ padding: 14px 0 16px; }
 
-.misc-card-title{
-  margin: 0 0 6px;
-  font-size: 18px;
-  line-height: 1.25;
-}
-
 .misc-card-meta{
   margin: 7px 0 4px;
   font-size: 14px;
   font-weight: 200;
   font-style: italic;
   opacity: 0.85;
+}
+
+.misc-card-title{
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.25;
 }
 
 .misc-card-year{
@@ -968,9 +1050,6 @@ a{ color: inherit; text-decoration: none; }
   --gallery-gap: 15px;
   --gallery-row-min-height: 200px; /* 可调：最小行高（px） */
   --gallery-row-max-height: 225px; /* 可调：最大行高（px） */
-  /* Posters 模式使用独立的、固定的大行高（浮动区间很小） */
-  --gallery-poster-row-min-height: 460px;
-  --gallery-poster-row-max-height: 480px;
   display: block;
   width: 100%;
 }
@@ -1615,14 +1694,15 @@ a{ color: inherit; text-decoration: none; }
 
   /* publication tablet */
   .pub-item{
-    grid-template-columns: 132px 1fr;
+    grid-template-columns: 177px 1fr;
     gap: 14px;
   }
 
   .pub-thumb{
-    width: 132px;
-    height: 92px;
+    width: 177px;
+    height: 111px;
   }
+
 
   .pub-text{ font-size: 15px; }
 
@@ -1658,6 +1738,16 @@ a{ color: inherit; text-decoration: none; }
 
 /* ===== phones ===== */
 @media (max-width: 640px){
+  /* phones: no room on the right, the pool drops under its static tab */
+  .filter-shell:has(.filter-tabs--fold){ grid-template-columns: auto 1fr; grid-template-rows: none; }
+  .filter-tabs--fold .filter-fold-pool{ grid-column: 2; margin-top: 8px; }
+  .filter-tabs--contributor.filter-tabs--fold .filter-fold-toggle,
+  .filter-tabs--contributor.filter-tabs--fold .filter-fold-slot{ margin-top: 12px; }
+  .filter-tabs--fold:not(.filter-tabs--contributor) .filter-fold-pool{ grid-row: 2; }
+  .filter-tabs--contributor.filter-tabs--fold > *{ grid-row: 3; }
+  .filter-tabs--contributor.filter-tabs--fold .filter-fold-pool{ grid-row: 4; margin-top: 8px; }
+  .filter-shell:has(.filter-tabs--fold) > .filter-panels{ grid-row: 5; }
+
   .hero{ height: 380px; }
 
   .hero-content{
@@ -1705,12 +1795,19 @@ a{ color: inherit; text-decoration: none; }
   }
 
   .pub-thumb{
-    width: min(220px, 100%);
+    width: min(295px, 100%);
     height: auto;
-    aspect-ratio: 159 / 108;
+    aspect-ratio: 215 / 135;
   }
 
-  .pub-text{
+
+  .pub-links{
+    position: static;
+    margin-top: 12px;
+  }
+
+  .pub-text,
+  .pub-text-sup{
     font-size: 14px;
     line-height: 1.5;
   }

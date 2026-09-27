@@ -49,208 +49,290 @@
           <div class="filter-shell">
             <input class="filter-radio" type="radio" name="pub-category" id="pub-all" checked />
             <input class="filter-radio" type="radio" name="pub-category" id="pub-xr" />
+            <input class="filter-radio" type="radio" name="pub-category" id="pub-cv" />
+            <input class="filter-radio" type="radio" name="pub-category" id="pub-robot" />
             <input class="filter-radio" type="radio" name="pub-category" id="pub-ai" />
             <input class="filter-radio" type="radio" name="pub-category" id="pub-haptics" />
             <input class="filter-radio" type="radio" name="pub-category" id="pub-access" />
 
             <div class="filter-tabs" role="tablist" aria-label="Publication Categories">
               <label for="pub-all">All Categories</label>
-              <label class="filter-tab--span-2" for="pub-xr">Spatial Computing | AR</label>
-              <label for="pub-ai">AI</label>
+              <label for="pub-xr">Mixed Reality | Extended Reality</label>
+              <label for="pub-cv">3D Computer Vision | Reconstruction</label>
+              <label for="pub-robot">Robotics | Mechatronics</label>
+              <label for="pub-ai">Multimodal LLMs | Agentic AI</label>
               <label for="pub-haptics">Haptics</label>
-              <label for="pub-access">Accessibility</label>
+              <label for="pub-access">Accessiblity</label>
             </div>
 
             <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-all" checked />
             <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-craft2" />
             <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-personal" />
-            <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-colab" />
 
             <div class="filter-tabs filter-tabs--contributor" role="tablist" aria-label="Contributor">
-              <label for="pub-contrib-all">All teams</label>
-              <label for="pub-contrib-craft2">CRAFT^2</label>
-              <label for="pub-contrib-personal">Personal</label>
-              <label for="pub-contrib-colab">Collaborations</label>
+              <label for="pub-contrib-all">All Teams</label>
+              <label for="pub-contrib-craft2">CRAFT^2 Teamwork</label>
+              <label for="pub-contrib-personal">Personal Work</label>
             </div>
 
             <div class="filter-panels">
-              <!-- 每项只写一次，用 data-ca tegory 检索分类 -->
-              <article class="pub-item" data-category="haptics" data-contributor="craft2">
+
+              <hr class="content-divider" />
+
+                <article class="pub-item" data-category="xr cv" data-contributor="personal">
                 <img class="pub-thumb" src="./assets/dummy.png" alt="accessible personal fabrication" />
                 <div class="pub-body">
                   <p class="pub-text">
-                    <strong>Z. Pan</strong>, D. Liu, K. Wang, X. Yin, H. Wen, C, Lin "<strong>Spatiality Decoder: Toward Unity and Ubiquity for Inhabiting Spatialized Photographic Media in Mixed Reality</strong>", 
-                    accepted: VRST 2026 Posters.
+                    <strong>Z. Pan</strong>, D. Ly, S. Je. "<strong>Transcendent Reality: Spatial Manifestation over the Temporal Continuum in Mixed Reality</strong>". 
+                    Under review: CHI 207 Papers.
                   </p>
-                  <p class="pub-meta">
-                    <span class="pub-linkset" aria-label="Links">
-                      <!-- <a
-                        class="pub-term pub-term--readmore"
-                        href="./pages/accessible-personal-fab.html"
-                        >
-                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
-                        Read More
-                      </a> -->
-                    </span>
-                  </p>
+                  <div class="pub-links" aria-label="Links">
+                    <!-- <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/accessible-personal-fab.html"
+                      >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a> -->
+                  </div>
                 </div>
               </article>
 
-              <article class="pub-item" data-category="access ai" data-contributor="craft2 colab">
+              <article class="pub-item" data-category="xr cv robot" data-contributor="personal">
+                <img class="pub-thumb" src="./assets/dummy.png" alt="accessible personal fabrication" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    D. Ly*, <strong>Z. Pan</strong>*, Z. Guan, Y. Zhang, K. Le, S. Je. "<strong>Beyond Motion Intent: Exploring Mobile Robot Proxemic Transparency in Public Encounters Through AR Visualization Concepts</strong>". 
+                    Under review: CHI 207 Papers.
+                  </p>
+                  <p class="pub-text-sup">
+                    *Equal Contributions
+                  </p>
+                  <div class="pub-links" aria-label="Links">
+                    <!-- <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/accessible-personal-fab.html"
+                      >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a> -->
+                  </div>
+                </div>
+              </article>
+              
+              <article class="pub-item" data-category="xr cv" data-contributor="craft2">
+                <img class="pub-thumb" src="./assets/dummy.png" alt="accessible personal fabrication" />
+                <div class="pub-body">
+                  <p class="pub-text">
+                    <strong>Z. Pan</strong>, D. Liu, K. Wang, X. Yin, H. Wen, C, Lin. 2026. <strong>Spatiality Decoder: Toward Unity and Ubiquity for Inhabiting Spatialized Photographic Media in Mixed Reality</strong>. 
+                    Accepted: VRST 2026 Posters.
+                  </p>
+                  <div class="pub-links" aria-label="Links">
+                    <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/spatiality-decoder.html"
+                      >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://youtu.be/dst4hBizgQs?si=WH4s00I15uwWXGiw"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                      Video
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="pub-item" data-category="cv ai access" data-contributor="craft2">
                 <img class="pub-thumb" src="./assets/pub/apf-tn.webp" alt="accessible personal fabrication" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>*, D. Liu*, C. Lin, H. Shen, Z. Wei, B. Zhang, Z. Jiang, G. Shen, S. Tang. 2026. <strong>Personal 3D Printing without Visual Dependency in the Generative AI Era: Opportunities and Challenges</strong>. 
-                    In <em>Designing Interactive Systems Conference (DIS '26 Companion), June 13-17, 2026, Singapore, Singapore</em>. 
-                    &nbsp&nbsp&nbsp *Equal Contributions
+                    In <em>Designing Interactive Systems Conference (DIS '26 Companion), June 13-17, 2026, Singapore, Singapore</em>.
                   </p>
-                  <p class="pub-meta">
-                    <span class="pub-linkset" aria-label="Links">
-                      <a
-                        class="pub-term pub-term--readmore"
-                        href="./pages/accessible-personal-fab.html"
-                      >
-                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
-                        Read More
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://dl.acm.org/doi/full/10.1145/3802974.3809447"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
-                        DOI
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://drive.google.com/file/d/1YzwTImLMjcmyXPHqO-q67uXaup9gg7JZ/view?usp=drive_link"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="easel-outline" aria-hidden="true"></ion-icon>
-                        Poster
-                      </a>
-                    </span>
+                  <p class="pub-text-sup">
+                    *Equal Contributions
                   </p>
+                  <div class="pub-links" aria-label="Links">
+                    <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/accessible-personal-fab.html"
+                    >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://dl.acm.org/doi/full/10.1145/3802974.3809447"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                      DOI
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/paper/apf-paper.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                      Paper
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/poster/apf-poster.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="easel-outline" aria-hidden="true"></ion-icon>
+                      Poster
+                    </a>
+                  </div>
                 </div>
               </article>
 
-              <article class="pub-item" data-category="xr" data-contributor="personal">
+              <article class="pub-item" data-category="xr cv" data-contributor="personal">
                 <img class="pub-thumb" src="./assets/pub/rular-tn.webp" alt="rulAR" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>. 2025. <strong>rulAR: Spatial Measurement in Indoor Scenes via Intelligent Labeling and Immersive Visualization</strong>. 
                     In <em>Proceedings of the 2025 International Conference on Human-Engaged Computing (ICHEC 2025), November 21-23, 2025, Singapore, Singapore</em>.
                   </p>
-                  <p class="pub-meta">
-                    <span class="pub-linkset" aria-label="Links">
-                      <a
-                        class="pub-term pub-term--readmore"
-                        href="./pages/rular.html"
-                      >
-                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
-                        Read More
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://dl.acm.org/doi/full/10.1145/3786995.3787070"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
-                        DOI
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://drive.google.com/file/d/132OJ9UdvwuvKjABE3tozqCLqg22azpTJ/view?usp=drive_link"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="easel-outline" aria-hidden="true"></ion-icon>
-                        Poster
-                      </a>
-                    </span>
-                  </p>
+                  <div class="pub-links" aria-label="Links">
+                    <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/rular.html"
+                    >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://dl.acm.org/doi/full/10.1145/3786995.3787070"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                      DOI
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/paper/rular-paper.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                      Paper
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/poster/rular-poster.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="easel-outline" aria-hidden="true"></ion-icon>
+                      Poster
+                    </a>
+                  </div>
                 </div>
               </article>
 
-              <article class="pub-item" data-category="xr" data-contributor="personal">
+              <article class="pub-item" data-category="xr cv" data-contributor="personal">
                 <img class="pub-thumb" src="./assets/pub/marker-tn.webp" alt="mARker" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>. 2025. <strong>mARker: Hybrid-Interfaced Spatial Sketching via iPad AR, Apple Pencil, and an Instantly Crafted Tracker</strong>. 
                     In <em>Proceedings of the 2025 IEEE International Symposium on Mixed and Augmented Reality Adjunct (ISMAR '25-Adjunct), October 8-12, 2025, Daejeon, Korea, Republic of</em>.
                   </p>
-                  <p class="pub-meta">
-                    <span class="pub-linkset" aria-label="Links">
-                      <a
-                        class="pub-term pub-term--readmore"
-                        href="./pages/marker.html"
-                      >
-                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
-                        Read More
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://ieeexplore.ieee.org/document/11236371"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
-                        DOI
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://youtu.be/zoM2F_kCsGM?si=zHgigjCpwlEOiQn3"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
-                        Video
-                      </a>
-                    </span>
-                  </p>
+                  <div class="pub-links" aria-label="Links">
+                    <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/marker.html"
+                    >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://ieeexplore.ieee.org/document/11236371"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                      DOI
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/paper/marker-paper.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                      Paper
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://youtu.be/zoM2F_kCsGM?si=zHgigjCpwlEOiQn3"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                      Video
+                    </a>
+                  </div>
                 </div>
               </article>
 
-              <article class="pub-item" data-category="xr haptics" data-contributor="craft2">
-                <img class="pub-thumb" src="./assets/pub/karp-tn.webp" alt="karP" />
+              <article class="pub-item" data-category="xr robot haptics" data-contributor="craft2">
+                <img class="pub-thumb" src="./assets/pub/karp-tn.webp" data-hover="./assets/pub/karp-tn-gif.webp" alt="karP" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>, G. Ge, H. Lu, Z. Meng, H. Wu, Q. Yang, J. Liang. 2025. <strong>karP: an experiential prototype for Kinesthetic Augmented Reality on mobile — Playful, Portable, Producible</strong>. 
                     In <em>Designing Interactive Systems Conference (DIS '25 Companion), July 5-9, 2025, Funchal, Portugal</em>.
                   </p>
-                  <p class="pub-meta">
-                    <span class="pub-linkset" aria-label="Links">
-                      <a
-                        class="pub-term pub-term--readmore"
-                        href="./pages/karp.html"
-                      >
-                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
-                        Read More
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://dl.acm.org/doi/full/10.1145/3715668.3735607"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
-                        DOI
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://youtu.be/KyL3hKwZwgw?si=bezrsy2qR3SJyW_e"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
-                        Video
-                      </a>
+                  <div class="pub-links" aria-label="Links">
+                    <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/karp.html"
+                    >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://dl.acm.org/doi/full/10.1145/3715668.3735607"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                      DOI
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/paper/karp-paper.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                      Paper
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://youtu.be/KyL3hKwZwgw?si=bezrsy2qR3SJyW_e"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                      Video
+                    </a>
 
-                    </span>
-                  </p>
+                  </div>
                 </div>
               </article>
 
@@ -261,35 +343,51 @@
                     <strong>Z. Pan</strong>, G. Ge, Z. Jiang, Z. Meng, L. Wang, H. Wu, L. Wang, J. Liang, H. Wen. 2024. <strong>Tangible Compass: An Affordable and DIY-Friendly Handheld Kinesthetic Device for Haptic Accessible Navigation</strong>. 
                     In <em>Chinese CHI 2024 (CHCHI 2024), November 22-25, 2024, Shenzhen, China</em>.
                   </p>
-                  <p class="pub-meta">
-                    <span class="pub-linkset" aria-label="Links">
-                      <a
-                        class="pub-term pub-term--readmore"
-                        href="./pages/tangible-compass.html"
-                      >
-                        <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
-                        Read More
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://dl.acm.org/doi/full/10.1145/3758871.3758914"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
-                        DOI
-                      </a>
-                      <a
-                        class="pub-term"
-                        href="https://youtu.be/lYYmHA9p7SU?si=2TwBhY-zxBnH3cna"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
-                        Video
-                      </a>
-                    </span>
-                  </p>
+                  <div class="pub-links" aria-label="Links">
+                    <a
+                      class="pub-link pub-link--readmore"
+                      href="./pages/tangible-compass.html"
+                    >
+                      <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
+                      Read More
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://dl.acm.org/doi/full/10.1145/3758871.3758914"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+                      DOI
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/paper/tc-paper.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                      Paper
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="./assets/poster/tc-poster.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="easel-outline" aria-hidden="true"></ion-icon>
+                      Poster
+                    </a>
+                    <a
+                      class="pub-link"
+                      href="https://youtu.be/lYYmHA9p7SU?si=2TwBhY-zxBnH3cna"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+                      Video
+                    </a>
+                  </div>
                 </div>
               </article>
             </div>

@@ -12,12 +12,11 @@ function applyPublicationDualFilter() {
   const categoryRadios = shell.querySelectorAll('input[name="pub-category"]');
   const contributorRadios = shell.querySelectorAll('input[name="pub-contributor"]');
   const items = shell.querySelectorAll(".filter-panels .pub-item");
-  const categoryMap = { "pub-all": null, "pub-xr": "xr", "pub-ai": "ai", "pub-haptics": "haptics", "pub-access": "access" };
+  const categoryMap = { "pub-all": null, "pub-xr": "xr", "pub-cv": "cv", "pub-robot": "robot", "pub-ai": "ai", "pub-haptics": "haptics", "pub-access": "access" };
   const contribMap = {
     "pub-contrib-all": null,
     "pub-contrib-craft2": "craft2",
     "pub-contrib-personal": "personal",
-    "pub-contrib-colab": "colab",
   };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
   const categoryId = getChecked(categoryRadios)?.id;
@@ -66,7 +65,6 @@ function applyGalleryDualFilter() {
     "gal-visual": "visual",
     "gal-events": "events",
     "gal-photo": "photo",
-    "gal-posters": "posters",
   };
   const contribMap = { "gal-contrib-all": null, "gal-contrib-craft2": "craft2", "gal-contrib-personal": "personal" };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
@@ -74,22 +72,12 @@ function applyGalleryDualFilter() {
   const contribId = getChecked(contributorRadios)?.id;
   const categoryVal = categoryMap[categoryId];
   const contribVal = contribMap[contribId];
-  const postersMode = categoryVal === "posters";
   items.forEach((el) => {
     const cat = el.getAttribute("data-category") || "";
     const contrib = el.getAttribute("data-contributor") || "";
-    const catList = cat.split(/\s+/);
-    const isPoster = catList.includes("posters");
-    let show;
-    if (postersMode) {
-      // Posters 是独立分类：只显示 poster 项
-      show = isPoster;
-    } else {
-      // 其它任何分类（含 All）都不显示 poster 项
-      const categoryMatch = categoryVal == null || catList.includes(categoryVal);
-      const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
-      show = !isPoster && categoryMatch && contributorMatch;
-    }
+    const categoryMatch = categoryVal == null || cat.split(/\s+/).includes(categoryVal);
+    const contributorMatch = contribVal == null || contrib.split(/\s+/).includes(contribVal);
+    const show = categoryMatch && contributorMatch;
     el.style.display = show ? "block" : "none";
   });
   requestAnimationFrame(layoutGalleryMasonry);
@@ -99,18 +87,12 @@ function layoutGalleryMasonry() {
   const grid = document.querySelector(".gallery-grid");
   if (!grid) return;
 
-  // 是否处于独立的 Posters 模式（由分类单选钮决定）
-  const postersMode = !!document.querySelector("#gal-posters:checked");
-
   const style = window.getComputedStyle(grid);
   const gap = parseFloat(style.getPropertyValue("--gallery-gap")) || 0;
   const containerWidth = grid.clientWidth;
   if (containerWidth <= 0) return;
-  // Posters 模式使用独立的、固定的大行高计算器
-  const minVar = postersMode ? "--gallery-poster-row-min-height" : "--gallery-row-min-height";
-  const maxVar = postersMode ? "--gallery-poster-row-max-height" : "--gallery-row-max-height";
-  const minRowHeight = parseFloat(style.getPropertyValue(minVar)) || (postersMode ? 460 : 120);
-  const maxRowHeight = parseFloat(style.getPropertyValue(maxVar)) || (postersMode ? 480 : 210);
+  const minRowHeight = parseFloat(style.getPropertyValue("--gallery-row-min-height")) || 120;
+  const maxRowHeight = parseFloat(style.getPropertyValue("--gallery-row-max-height")) || 210;
   const rowMin = Math.min(minRowHeight, maxRowHeight);
   const rowMax = Math.max(minRowHeight, maxRowHeight);
   const randomRowHeight = () => rowMin + Math.random() * (rowMax - rowMin);
@@ -201,9 +183,101 @@ function layoutGalleryMasonry() {
   });
 }
 
+// Fold each filter row into a single-select dropdown: only the active tab shows,
+// a chevron toggle reveals the rest; picking one collapses the row again.
+function initFoldableFilterTabs(shell) {
+  const rows = Array.from(shell.querySelectorAll(".filter-tabs"));
+  const closeAll = () => rows.forEach((row) => row.foldClose && row.foldClose());
+
+  rows.forEach((row) => {
+    const labels = Array.from(row.querySelectorAll("label[for]"));
+    const radios = labels.map((l) => document.getElementById(l.htmlFor)).filter(Boolean);
+    if (!radios.length) return;
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "filter-fold-toggle";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Show options");
+    toggle.innerHTML = '<ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>';
+
+    // Active tab sits next to the toggle; the rest wait in a pool on the row below.
+    const slot = document.createElement("div");
+    slot.className = "filter-fold-slot";
+    const pool = document.createElement("div");
+    pool.className = "filter-fold-pool";
+    row.prepend(toggle, slot);
+    row.append(pool);
+    row.classList.add("filter-tabs--fold");
+
+    const setOpen = (open) => {
+      row.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    };
+    const syncActive = () => {
+      labels.forEach((l) => {
+        const r = document.getElementById(l.htmlFor);
+        (r && r.checked ? slot : pool).appendChild(l);
+      });
+    };
+    row.foldClose = () => setOpen(false);
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = !row.classList.contains("is-open");
+      closeAll();
+      setOpen(open);
+    });
+    // Clicking the static tab when it isn't the first ("All") option resets the row to "All".
+    slot.addEventListener("click", (e) => {
+      const first = radios[0];
+      if (!e.target.closest("label") || first.checked) return;
+      e.preventDefault();
+      first.checked = true;
+      first.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    radios.forEach((r) =>
+      r.addEventListener("change", () => {
+        syncActive();
+        setOpen(false);
+      })
+    );
+    syncActive();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".filter-tabs--fold")) closeAll();
+  });
+}
+
+// Thumbs with data-hover swap to that animation while hovered (restarting from the first frame),
+// and back to the static src on leave. The animation is preloaded so the first hover isn't blank.
+function initHoverThumbs() {
+  document.querySelectorAll("img[data-hover]").forEach((img) => {
+    const still = img.getAttribute("src");
+    const anim = img.dataset.hover;
+    new Image().src = anim;
+
+    // wrap so a play badge can sit on top of the still frame (an <img> can't hold children)
+    const wrap = document.createElement("span");
+    wrap.className = "thumb-hover-wrap";
+    img.replaceWith(wrap);
+    wrap.append(img);
+    wrap.insertAdjacentHTML("beforeend", '<ion-icon class="thumb-hover-badge" name="play-circle-outline" aria-hidden="true"></ion-icon>');
+    img.addEventListener("mouseenter", () => {
+      // a fresh #fragment restarts the GIF from frame 1 without re-downloading it
+      img.src = `${anim}#${Date.now()}`;
+    });
+    img.addEventListener("mouseleave", () => {
+      img.src = still;
+    });
+  });
+}
+
 function initDualFilters() {
   const shell = document.querySelector(".filter-shell");
   if (!shell) return;
+  initFoldableFilterTabs(shell);
   if (shell.querySelector("#pub-contrib-all")) {
     applyPublicationDualFilter();
     shell.querySelectorAll('input[name="pub-category"], input[name="pub-contributor"]').forEach((r) => {
@@ -218,35 +292,8 @@ function initDualFilters() {
   }
   if (shell.querySelector("#gal-contrib-all")) {
     applyGalleryDualFilter();
-    const postersRadio = shell.querySelector("#gal-posters");
-    const catRadios = shell.querySelectorAll('input[name="gal-category"]');
-    const contribRadios = shell.querySelectorAll('input[name="gal-contributor"]');
-    const anyContribChecked = () => Array.from(contribRadios).some((c) => c.checked);
-
-    catRadios.forEach((r) => {
-      r.addEventListener("change", () => {
-        if (!r.checked) return;
-        if (r.id === "gal-posters") {
-          // Posters stands alone: drop any contributor selection.
-          contribRadios.forEach((c) => (c.checked = false));
-        } else if (!anyContribChecked()) {
-          // Leaving Posters: restore the default contributor selection.
-          const all = shell.querySelector("#gal-contrib-all");
-          if (all) all.checked = true;
-        }
-        applyGalleryDualFilter();
-      });
-    });
-
-    contribRadios.forEach((r) => {
-      r.addEventListener("change", () => {
-        // Selecting a contributor exits the standalone Posters mode.
-        if (r.checked && postersRadio && postersRadio.checked) {
-          const all = shell.querySelector("#gal-all");
-          if (all) all.checked = true;
-        }
-        applyGalleryDualFilter();
-      });
+    shell.querySelectorAll('input[name="gal-category"], input[name="gal-contributor"]').forEach((r) => {
+      r.addEventListener("change", applyGalleryDualFilter);
     });
   }
 }
@@ -339,6 +386,7 @@ function initTimelinePopupCards() {
 
 onReady(() => {
   initDualFilters();
+  initHoverThumbs();
   initTimelinePopupCards();
   layoutGalleryMasonry();
 
