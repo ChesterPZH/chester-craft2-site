@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Chester | CRAFT^2</title>
+    <title>Chester | Publication</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -14,7 +14,7 @@
           <ul class="nav-list">
             <li><a href="./index.html">Home</a></li>
             <li><a href="./craft-square.html">CRAFT^2</a></li>
-            <li><a href="./research.html">Research</a></li>
+            <!-- <li><a href="./research.html">Research</a></li> -->
             <li><a href="./publication.html" aria-current="page">Publication</a></li>
             <li><a href="./project.html">Project</a></li>
             <li><a href="./gallery.html">Gallery</a></li>
@@ -25,7 +25,7 @@
     </header>
 
     <main>
-      <section class="hero" aria-label="Intro">
+      <!-- <section class="hero" aria-label="Intro">
         <video
           class="hero-video"
           autoplay
@@ -33,17 +33,15 @@
           loop
           playsinline
           preload="auto"
-          poster="./assets/research/karp/karp-1.webp"
         >
-          <!-- 若无本地视频，仍可先用 poster 静态图 -->
         </video>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="container hero-content">
           <p class="hero-text">
-            Chester's research involed in variaty of Human-Computer Interaction area, and are showcased in HCI venue Conferences.
+            Chester's research involves a variety of Human-Computer Interaction areas and is showcased at HCI conference venues.
           </p>
         </div>
-      </section>
+      </section> -->
 
       <section class="publication-section" aria-label="Publications">
         <div class="container">
@@ -58,12 +56,12 @@
 
             <div class="filter-tabs" role="tablist" aria-label="Publication Categories">
               <label for="pub-all">All Categories</label>
-              <label for="pub-xr">Mixed Reality | Extended Reality</label>
+              <label for="pub-xr">Mixed Reality | Augmented Reality</label>
               <label for="pub-cv">3D Computer Vision | Reconstruction</label>
               <label for="pub-robot">Robotics | Mechatronics</label>
               <label for="pub-ai">Multimodal LLMs | Agentic AI</label>
               <label for="pub-haptics">Haptics</label>
-              <label for="pub-access">Accessiblity</label>
+              <label for="pub-access">Accessibility</label>
             </div>
 
             <input class="filter-radio" type="radio" name="pub-contributor" id="pub-contrib-all" checked />
@@ -72,8 +70,8 @@
 
             <div class="filter-tabs filter-tabs--contributor" role="tablist" aria-label="Contributor">
               <label for="pub-contrib-all">All Teams</label>
-              <label for="pub-contrib-craft2">CRAFT^2 Teamwork</label>
-              <label for="pub-contrib-personal">Personal Work</label>
+              <label for="pub-contrib-craft2">CRAFT^2</label>
+              <label for="pub-contrib-personal">Personal</label>
             </div>
 
             <div class="filter-panels">
@@ -81,11 +79,11 @@
               <hr class="content-divider" />
 
                 <article class="pub-item" data-category="xr cv" data-contributor="personal">
-                <img class="pub-thumb" src="./assets/dummy.png" alt="accessible personal fabrication" />
+                <img class="pub-thumb" src="./assets/pub/tr-tn-gif.webp" alt="Transcendent Reality" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>, D. Ly, S. Je. "<strong>Transcendent Reality: Spatial Manifestation over the Temporal Continuum in Mixed Reality</strong>". 
-                    Under review: CHI 207 Papers.
+                    Under review: CHI 2027 Papers.
                   </p>
                   <div class="pub-links" aria-label="Links">
                     <!-- <a
@@ -100,11 +98,11 @@
               </article>
 
               <article class="pub-item" data-category="xr cv robot" data-contributor="personal">
-                <img class="pub-thumb" src="./assets/dummy.png" alt="accessible personal fabrication" />
+                <img class="pub-thumb" src="./assets/pub/bmi-tn-gif.webp" alt="Beyond Motion Intent" />
                 <div class="pub-body">
                   <p class="pub-text">
                     D. Ly*, <strong>Z. Pan</strong>*, Z. Guan, Y. Zhang, K. Le, S. Je. "<strong>Beyond Motion Intent: Exploring Mobile Robot Proxemic Transparency in Public Encounters Through AR Visualization Concepts</strong>". 
-                    Under review: CHI 207 Papers.
+                    Under review: CHI 2027 Papers.
                   </p>
                   <p class="pub-text-sup">
                     *Equal Contributions
@@ -122,20 +120,20 @@
               </article>
               
               <article class="pub-item" data-category="xr cv" data-contributor="craft2">
-                <img class="pub-thumb" src="./assets/dummy.png" alt="accessible personal fabrication" />
+                <img class="pub-thumb" src="./assets/pub/spatialdecode-tn-gif.webp" alt="Spatiality Decoder" />
                 <div class="pub-body">
                   <p class="pub-text">
-                    <strong>Z. Pan</strong>, D. Liu, K. Wang, X. Yin, H. Wen, C, Lin. 2026. <strong>Spatiality Decoder: Toward Unity and Ubiquity for Inhabiting Spatialized Photographic Media in Mixed Reality</strong>. 
+                    <strong>Z. Pan</strong>, D. Liu, K. Wang, X. Yin, H. Wen, C. Lin. 2026. <strong>Spatiality Decoder: Toward Unity and Ubiquity for Inhabiting Spatialized Photographic Media in Mixed Reality</strong>. 
                     Accepted: VRST 2026 Posters.
                   </p>
                   <div class="pub-links" aria-label="Links">
-                    <a
+                    <!-- <a
                       class="pub-link pub-link--readmore"
                       href="./pages/spatiality-decoder.html"
                       >
                       <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
                       Read More
-                    </a>
+                    </a> -->
                     <a
                       class="pub-link"
                       href="https://youtu.be/dst4hBizgQs?si=WH4s00I15uwWXGiw"
@@ -160,13 +158,13 @@
                     *Equal Contributions
                   </p>
                   <div class="pub-links" aria-label="Links">
-                    <a
+                    <!-- <a
                       class="pub-link pub-link--readmore"
                       href="./pages/accessible-personal-fab.html"
                     >
                       <ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>
                       Read More
-                    </a>
+                    </a> -->
                     <a
                       class="pub-link"
                       href="https://dl.acm.org/doi/full/10.1145/3802974.3809447"
@@ -199,7 +197,7 @@
               </article>
 
               <article class="pub-item" data-category="xr cv" data-contributor="personal">
-                <img class="pub-thumb" src="./assets/pub/rular-tn.webp" alt="rulAR" />
+                <img class="pub-thumb" src="./assets/pub/rular-tn-git.webp" alt="rulAR" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>. 2025. <strong>rulAR: Spatial Measurement in Indoor Scenes via Intelligent Labeling and Immersive Visualization</strong>. 
@@ -245,7 +243,7 @@
               </article>
 
               <article class="pub-item" data-category="xr cv" data-contributor="personal">
-                <img class="pub-thumb" src="./assets/pub/marker-tn.webp" alt="mARker" />
+                <img class="pub-thumb" src="./assets/pub/marker-tn-gif.webp" alt="mARker" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>. 2025. <strong>mARker: Hybrid-Interfaced Spatial Sketching via iPad AR, Apple Pencil, and an Instantly Crafted Tracker</strong>. 
@@ -291,7 +289,7 @@
               </article>
 
               <article class="pub-item" data-category="xr robot haptics" data-contributor="craft2">
-                <img class="pub-thumb" src="./assets/pub/karp-tn.webp" data-hover="./assets/pub/karp-tn-gif.webp" alt="karP" />
+                <img class="pub-thumb" src="./assets/pub/karp-tn-gif.webp" alt="karP" />
                 <div class="pub-body">
                   <p class="pub-text">
                     <strong>Z. Pan</strong>, G. Ge, H. Lu, Z. Meng, H. Wu, Q. Yang, J. Liang. 2025. <strong>karP: an experiential prototype for Kinesthetic Augmented Reality on mobile — Playful, Portable, Producible</strong>. 

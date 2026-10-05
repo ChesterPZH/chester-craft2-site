@@ -38,7 +38,7 @@ function applyMiscDualFilter() {
   const categoryRadios = shell.querySelectorAll('input[name="misc-category"]');
   const contributorRadios = shell.querySelectorAll('input[name="misc-contributor"]');
   const items = shell.querySelectorAll(".filter-panels .misc-card");
-  const categoryMap = { "misc-all": null, "misc-projects": "projects", "misc-resources": "resources" };
+  const categoryMap = { "misc-all": null, "misc-research": "research", "misc-course": "course", "misc-advising": "advising" };
   const contribMap = { "misc-contrib-all": null, "misc-contrib-craft2": "craft2", "misc-contrib-personal": "personal" };
   const getChecked = (radios) => Array.from(radios).find((r) => r.checked);
   const categoryId = getChecked(categoryRadios)?.id;
@@ -250,30 +250,6 @@ function initFoldableFilterTabs(shell) {
   });
 }
 
-// Thumbs with data-hover swap to that animation while hovered (restarting from the first frame),
-// and back to the static src on leave. The animation is preloaded so the first hover isn't blank.
-function initHoverThumbs() {
-  document.querySelectorAll("img[data-hover]").forEach((img) => {
-    const still = img.getAttribute("src");
-    const anim = img.dataset.hover;
-    new Image().src = anim;
-
-    // wrap so a play badge can sit on top of the still frame (an <img> can't hold children)
-    const wrap = document.createElement("span");
-    wrap.className = "thumb-hover-wrap";
-    img.replaceWith(wrap);
-    wrap.append(img);
-    wrap.insertAdjacentHTML("beforeend", '<ion-icon class="thumb-hover-badge" name="play-circle-outline" aria-hidden="true"></ion-icon>');
-    img.addEventListener("mouseenter", () => {
-      // a fresh #fragment restarts the GIF from frame 1 without re-downloading it
-      img.src = `${anim}#${Date.now()}`;
-    });
-    img.addEventListener("mouseleave", () => {
-      img.src = still;
-    });
-  });
-}
-
 function initDualFilters() {
   const shell = document.querySelector(".filter-shell");
   if (!shell) return;
@@ -346,33 +322,27 @@ function initTimelinePopupCards() {
       card.style.top = `${clampedTop}px`;
     };
 
-    // 改为 hover 展示：hover 区域是整张 timeline-card（logo + 文本）
+    // 点击打开（卡片保留 hover 动画）；再点同一个关闭，点另一个直接切换，点其他任意位置关闭
+    const open = (trigger) => {
+      const card = getCardByTrigger(trigger);
+      if (!card) return;
+      closeAll();
+      placeCard(trigger, card);
+      card.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+      activeTrigger = trigger;
+      trigger.closest(".timeline-item")?.querySelector(".timeline-dot")?.classList.add("timeline-dot--popup-open");
+    };
+
     triggers.forEach((trigger) => {
-      const hoverTarget = trigger.closest(".timeline-card") || trigger;
-
-      hoverTarget.addEventListener("mouseenter", () => {
-        const card = getCardByTrigger(trigger);
-        if (!card) return;
-        closeAll();
-        placeCard(trigger, card);
-        card.classList.add("is-open");
-        trigger.setAttribute("aria-expanded", "true");
-        activeTrigger = trigger;
-
-        // 当前激活的节点 dot 高亮
-        const currentItem = trigger.closest(".timeline-item");
-        const currentDot = currentItem
-          ? currentItem.querySelector(".timeline-dot")
-          : null;
-        if (currentDot) {
-          currentDot.classList.add("timeline-dot--popup-open");
-        }
+      trigger.addEventListener("click", () => {
+        if (activeTrigger === trigger) closeAll();
+        else open(trigger);
       });
+    });
 
-      // 鼠标离开 hoverTarget 时立即关闭
-      hoverTarget.addEventListener("mouseleave", () => {
-        closeAll();
-      });
+    document.addEventListener("click", (e) => {
+      if (activeTrigger && !triggers.some((t) => t.contains(e.target))) closeAll();
     });
 
     window.addEventListener("resize", () => {
@@ -384,9 +354,267 @@ function initTimelinePopupCards() {
   });
 }
 
+// hgraph: turn the authored markup (hgraph-title + <p data-lane="a">…) into the graph nodes.
+// Lane order comes from the Research column's buttons; a lane a paper doesn't mention becomes an empty cell.
+function buildHGraph() {
+  document.querySelectorAll(".hgraph").forEach((graph) => {
+    const fixed = graph.querySelector(".hgraph-col--fixed");
+    if (!fixed) return;
+    const laneKeys = Array.from(fixed.querySelectorAll("[data-lane]")).map((el) => el.dataset.lane);
+
+    const makeNode = (termEl, main) => {
+      const node = document.createElement("div");
+      node.className = "hgraph-node" + (main ? " hgraph-node--main" : "");
+      if (!termEl) {
+        node.classList.add("is-empty");
+        return node;
+      }
+      const dot = document.createElement("span");
+      dot.className = "hgraph-dot";
+      dot.setAttribute("aria-hidden", "true");
+      termEl.classList.remove("hgraph-title");
+      termEl.classList.add("hgraph-term");
+      if (termEl.dataset.popupImage) node.classList.add("has-popup");
+      node.append(dot, termEl);
+      return node;
+    };
+
+    graph.querySelectorAll(".hgraph-col").forEach((col) => {
+      const title = col.querySelector(".hgraph-title");
+      const byLane = {};
+      col.querySelectorAll("[data-lane]").forEach((el) => (byLane[el.dataset.lane] = el));
+      // card text written separately as <p data-popup-for="x">; falls back to the lane text
+      col.querySelectorAll("[data-popup-for]").forEach((el) => {
+        const lane = byLane[el.dataset.popupFor];
+        if (lane) lane.popupHTML = el.innerHTML.trim();
+      });
+      if (col === fixed) {
+        Object.values(byLane).forEach((btn) => {
+          btn.classList.add("hgraph-filter");
+          btn.setAttribute("aria-pressed", "false");
+        });
+      }
+      const nodes = [makeNode(title, true), ...laneKeys.map((k) => makeNode(byLane[k] || null, false))];
+      col.replaceChildren(...nodes);
+    });
+
+    // all Research tabs share one width: the widest label on a single line
+    const tabs = Array.from(fixed.querySelectorAll(".hgraph-filter"));
+    const fitTabs = () => {
+      tabs.forEach((t) => (t.style.width = "max-content"));
+      const widest = Math.max(...tabs.map((t) => t.getBoundingClientRect().width));
+      tabs.forEach((t) => (t.style.width = ""));
+      if (widest > 0) graph.style.setProperty("--hgraph-tab-width", `${Math.ceil(widest)}px`);
+    };
+    fitTabs();
+    document.fonts?.ready.then(fitTabs); // re-measure once web fonts have loaded
+  });
+}
+
+// hgraph: within each column, connect the lane dots vertically (timeline style).
+// A single lane dot stays a lone dot; with several, the line runs from the first to the last,
+// passing through any empty lanes in between.
+function initHGraphLanes() {
+  document.querySelectorAll(".hgraph-col").forEach((col) => {
+    const lanes = Array.from(col.querySelectorAll(".hgraph-node:not(.hgraph-node--main)"));
+    const filled = lanes.map((n, i) => (n.classList.contains("is-empty") ? -1 : i)).filter((i) => i >= 0);
+    if (filled.length < 2) return;
+    const first = filled[0];
+    const last = filled[filled.length - 1];
+    lanes.forEach((n, i) => {
+      n.classList.toggle("has-up", i > first && i <= last);
+      n.classList.toggle("has-down", i >= first && i < last);
+    });
+  });
+}
+
+// hgraph: the Research lane buttons filter paper columns (multi-select toggles, intersection; none = show all).
+// Also keeps the year labels and the end of the main axis in sync with the visible columns.
+function initHGraphFilter() {
+  document.querySelectorAll(".hgraph").forEach((graph) => {
+    const fixed = graph.querySelector(".hgraph-col--fixed");
+    const papers = Array.from(graph.querySelectorAll(".hgraph-col")).filter((c) => c !== fixed);
+    const buttons = Array.from(graph.querySelectorAll(".hgraph-filter"));
+    const filledLanes = (col) =>
+      Array.from(col.querySelectorAll(".hgraph-node:not(.hgraph-node--main)"))
+        .map((n, i) => (n.classList.contains("is-empty") ? -1 : i))
+        .filter((i) => i >= 0);
+
+    const apply = () => {
+      const selected = buttons.map((b, i) => (b.getAttribute("aria-pressed") === "true" ? i : -1)).filter((i) => i >= 0);
+      const visible = papers.filter((col) => !selected.length || selected.every((i) => filledLanes(col).includes(i)));
+      papers.forEach((col) => {
+        col.classList.toggle("is-hidden", !visible.includes(col));
+        col.classList.remove("is-last");
+        col.querySelector(".hgraph-year")?.remove();
+      });
+      fixed.classList.remove("is-last");
+      (visible[visible.length - 1] || fixed).classList.add("is-last");
+
+      visible.forEach((col) => {
+        const year = col.dataset.year;
+        if (year) {
+          const label = document.createElement("span");
+          label.className = "hgraph-year";
+          label.textContent = year;
+          col.querySelector(".hgraph-node--main .hgraph-term")?.appendChild(label);
+        }
+      });
+
+      // Fade the lanes that aren't selected. A vertical segment stays solid only when
+      // nothing is selected or both lanes it connects are selected.
+      const sel = new Set(selected);
+      graph.querySelectorAll(".hgraph-col").forEach((col) => {
+        const lanes = Array.from(col.querySelectorAll(".hgraph-node:not(.hgraph-node--main)"));
+        lanes.forEach((n, i) => {
+          n.classList.toggle("is-dim", sel.size > 0 && !sel.has(i));
+          n.classList.remove("up-dim", "down-dim");
+        });
+        const filled = filledLanes(col);
+        for (let k = 0; k < filled.length - 1; k++) {
+          const a = filled[k];
+          const b = filled[k + 1];
+          if (!sel.size || (sel.has(a) && sel.has(b))) continue;
+          for (let i = a; i <= b; i++) {
+            if (i > a) lanes[i].classList.add("up-dim");
+            if (i < b) lanes[i].classList.add("down-dim");
+          }
+        }
+      });
+    };
+
+    buttons.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        btn.setAttribute("aria-pressed", String(btn.getAttribute("aria-pressed") !== "true"));
+        apply();
+      })
+    );
+    apply();
+  });
+}
+
+// hgraph: lanes with data-popup-image open a card (teaser + the lane text) over their own position.
+// Click to open; click the same item or anywhere else to close; click another item to switch.
+function initHGraphPopups() {
+  document.querySelectorAll(".hgraph").forEach((graph) => {
+    const triggers = Array.from(graph.querySelectorAll(".hgraph-node.has-popup > .hgraph-term"));
+    if (!triggers.length) return;
+
+    const card = document.createElement("div");
+    card.className = "hgraph-popup";
+    const img = document.createElement("img");
+    img.className = "hgraph-popup-image";
+    img.alt = "";
+    const text = document.createElement("p");
+    text.className = "hgraph-popup-text";
+    card.append(img, text);
+    document.body.appendChild(card);
+
+    let active = null;
+    const close = () => {
+      card.classList.remove("is-open");
+      active?.closest(".hgraph-node")?.classList.remove("is-open");
+      active = null;
+    };
+    const open = (term) => {
+      close();
+      img.src = term.dataset.popupImage;
+      text.innerHTML = term.popupHTML || term.innerHTML.trim();
+      const r = term.getBoundingClientRect();
+      const width = Math.min(500, document.documentElement.clientWidth - 32);
+      const left = Math.min(r.left, document.documentElement.clientWidth - width - 16);
+      card.style.width = `${width}px`;
+      card.style.left = `${left + window.scrollX}px`;
+      card.style.top = `${r.top + window.scrollY}px`;
+      card.classList.add("is-open");
+      term.closest(".hgraph-node").classList.add("is-open");
+      active = term;
+    };
+
+    triggers.forEach((term) =>
+      term.addEventListener("click", () => {
+        if (active === term) close();
+        else open(term);
+      })
+    );
+    document.addEventListener("click", (e) => {
+      if (active && !triggers.some((t) => t.contains(e.target))) close();
+    });
+    graph.addEventListener("scroll", close);
+    window.addEventListener("resize", close);
+  });
+}
+
+// Homepage hero: loop the pub animated webps one by one.
+// Each slide plays once in full (length read from the webp's frame durations), then the next one starts.
+function webpDurationMs(buf) {
+  const v = new DataView(buf);
+  let total = 0;
+  for (let p = 12; p + 8 <= v.byteLength; ) {
+    const tag = String.fromCharCode(v.getUint8(p), v.getUint8(p + 1), v.getUint8(p + 2), v.getUint8(p + 3));
+    const size = v.getUint32(p + 4, true);
+    if (tag === "ANMF") total += v.getUint8(p + 20) | (v.getUint8(p + 21) << 8) | (v.getUint8(p + 22) << 16);
+    p += 8 + size + (size & 1);
+  }
+  return total;
+}
+
+function initHeroSlides() {
+  const slides = Array.from(document.querySelectorAll(".hero-slide"));
+  if (!slides.length) return;
+
+  // crossfade length comes from CSS (--hero-fade), centered on the boundary between two clips
+  const fadeMs = () => {
+    const v = getComputedStyle(slides[0]).getPropertyValue("--hero-fade").trim();
+    return v.endsWith("ms") ? parseFloat(v) : (parseFloat(v) || 0) * 1000;
+  };
+
+  const cache = new Map();
+  // fetch once; each show gets a fresh object URL so the animation restarts from frame 1
+  const load = (src) => {
+    if (!cache.has(src)) {
+      cache.set(src, fetch(src)
+        .then((r) => r.blob())
+        .then(async (blob) => ({ blob, ms: webpDurationMs(await blob.arrayBuffer()) })));
+    }
+    return cache.get(src);
+  };
+
+  const show = async (i) => {
+    const img = slides[i];
+    let url = img.dataset.src;
+    let ms = 0;
+    try {
+      const data = await load(img.dataset.src);
+      url = URL.createObjectURL(data.blob);
+      ms = data.ms;
+    } catch (e) {
+      // file:// or fetch failure: plain src, fallback length
+    }
+    const old = img.src;
+    img.src = url;
+    if (old.startsWith("blob:")) URL.revokeObjectURL(old);
+    // wait until the first frame is decoded, so the clock starts when the clip actually starts
+    // (capped: decode() can stall in a background tab)
+    try { await Promise.race([img.decode(), new Promise((r) => setTimeout(r, 1000))]); } catch (e) {}
+    slides.forEach((s) => s.classList.toggle("is-active", s === img));
+
+    const next = (i + 1) % slides.length;
+    load(slides[next].dataset.src).catch(() => {}); // preload
+    // start the next clip half a fade early: each clip gives up half of the crossfade
+    setTimeout(() => show(next), Math.max((ms || 6000) - fadeMs() / 2, 0));
+  };
+
+  show(0);
+}
+
 onReady(() => {
+  initHeroSlides();
+  buildHGraph();
+  initHGraphLanes();
+  initHGraphFilter();
+  initHGraphPopups();
   initDualFilters();
-  initHoverThumbs();
   initTimelinePopupCards();
   layoutGalleryMasonry();
 

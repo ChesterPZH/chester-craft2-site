@@ -21,6 +21,9 @@
 
 html, body { margin: 0; padding: 0; }
 
+/* no rubber-band overscroll (no white edge above the header) */
+html, body { overscroll-behavior-y: none; }
+
 body{
   font-family: "Inter","Helvetica Neue","SF Pro Text",Arial,sans-serif;
   background: #fff;
@@ -35,6 +38,33 @@ body{
 main{ flex: 1 0 auto; }
 
 a{ color: inherit; text-decoration: none; }
+
+/* unified underlined text links (prose, about, publication, subpages) */
+:root{
+  --link-color: #000;
+  --link-underline: #d0d0d0;
+}
+.content-text a,
+.about-text a,
+.pub-link,
+.subpage-meta a,
+.subpage-link,
+.subpage-term{
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+.content-text a:hover,
+.about-text a:hover,
+.pub-link:hover,
+.subpage-meta a:hover,
+.subpage-link:hover,
+.subpage-term:hover{
+  text-decoration-color: var(--link-color);
+}
 
 /* web general
 - layout helpers
@@ -119,8 +149,9 @@ a{ color: inherit; text-decoration: none; }
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: auto;
-  object-fit: contain;
+  /* 可选：--content-img-ratio 固定比例（如 1 = 正方形），--content-img-fit 用 cover 裁切填满 */
+  aspect-ratio: var(--content-img-ratio, auto);
+  object-fit: var(--content-img-fit, contain);
   max-width: 100%;
   border-radius: var(--content-img-radius, 0);
 }
@@ -135,17 +166,6 @@ a{ color: inherit; text-decoration: none; }
   line-height: 1.8;
   color: #1f1f1f;
   align-self: var(--content-text-align, start);
-}
-
-.content-text a{
-  color: #666;
-  text-decoration: none;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-}
-
-.content-text a:hover{
-  text-decoration: underline;
 }
 
 /* 文：次级段落（比默认正文稍小） */
@@ -182,7 +202,8 @@ a{ color: inherit; text-decoration: none; }
      - navi tab
    ----------------------------------------------------------------------- */
 .site-header{
-  position: fixed;
+  /* sticky: takes up its own space, so content starts right below it */
+  position: sticky;
   top: 0; left: 0;
   width: 100%;
   z-index: 100;
@@ -274,8 +295,6 @@ a{ color: inherit; text-decoration: none; }
   background: #000;
   color: #fff;
 
-  /* push below fixed header */
-  margin-top: 70px;
 }
 
 /* - hero assets */
@@ -286,6 +305,28 @@ a{ color: inherit; text-decoration: none; }
   height: 100%;
   object-fit: cover;
 }
+
+/* - hero slides (animated webp loop, homepage) */
+.hero-slides{
+  position: absolute;
+  inset: 0;
+  /* 整体压暗：数值越小越暗 / 越灰 */
+  filter: brightness(0.3) saturate(0.7);
+}
+
+.hero-slide{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  /* 淡入淡出时长：前后两段各占一半 */
+  --hero-fade: 0.4s;
+  transition: opacity var(--hero-fade) ease-in-out;
+}
+
+.hero-slide.is-active{ opacity: 1; }
 
 .hero-overlay{
   position: absolute;
@@ -310,7 +351,7 @@ a{ color: inherit; text-decoration: none; }
   max-width: 90vw;
 
   margin: 0;
-  font-size: 22px;
+  font-size: 21px;
   line-height: 1.5;
   font-weight: 200;
   text-align: left;
@@ -497,6 +538,8 @@ a{ color: inherit; text-decoration: none; }
 }
 
 /* 带 pop-up 的时间轴卡片增加轻微弹出效果 */
+.timeline-card[data-popup-target]{ cursor: pointer; }
+
 .timeline-card[data-popup-target]:hover{
   transform: scale(1.02);
 }
@@ -645,6 +688,330 @@ a{ color: inherit; text-decoration: none; }
   left: calc(-1 * var(--timeline-children-offset) + (var(--timeline-track-width) / 2) - (var(--timeline-line-width) / 2));
   width: var(--timeline-line-width);
   background: var(--timeline-line-color);
+}
+
+/* =======================================================================
+   Horizontal graph (hgraph) — timeline 的横向版本
+   - 主轴/副轴线从左往右走；第一列固定，其余列可横向滚动
+   - 每列 = 1 个主节点 + 4 条 lane；空 lane（.is-empty）横线拉通
+   - dot 在左、文字在右（同 timeline），线从文字背后穿过
+   ======================================================================= */
+.hgraph{
+  /* 与 .timeline 保持一致的参数 */
+  --hgraph-dot-size: 12px;
+  --hgraph-line-width: 2px;
+  --hgraph-line-gap: 10px;
+  --hgraph-line-color: #cccccc;
+  --hgraph-dot-to-card-gap: 30px;
+  --hgraph-card-vertical-gap: 10px;
+
+  /* 文本框固定尺寸：高度 = timeline logo 高度 */
+  --hgraph-card-width: 180px;
+  /* 论文列（非固定列）的文本框：按内容自动，最窄 1 倍、最宽 2 倍 */
+  --hgraph-paper-card-min-width: var(--hgraph-card-width);
+  --hgraph-paper-card-max-width: calc(var(--hgraph-card-width) * 2);
+  --hgraph-card-height: 70px;
+  /* 文本框右侧到下一列 dot 之前的空白（线从这里穿过） */
+  --hgraph-card-margin: 70px;
+
+  /* lane 相对主节点右移 */
+  --hgraph-children-offset: 0px;
+  /* 固定行高：主轴行（标题 + dot）/ 每条 lane；文字超出行高时向上下溢出，不撑开 */
+  --hgraph-main-row-height: 65px;
+  --hgraph-row-height: 110px;
+
+  /* 主节点与第一条 lane 之间的间距（可为负：sub 文本框高 70px，上半部分是空白） */
+  --hgraph-main-gap: -10px;
+
+  /* 列宽 = lane dot 起点 + dot + gap + 文本框 + margin */
+  /* 固定列 tab 宽度：JS 按最宽的 tab（单行）写入 --hgraph-tab-width */
+  --hgraph-fixed-col-width: calc(var(--hgraph-children-offset) + var(--hgraph-dot-size) + var(--hgraph-dot-to-card-gap) + var(--hgraph-tab-width, var(--hgraph-card-width)) + var(--hgraph-card-margin));
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #bdbdbd transparent;
+}
+
+.hgraph::-webkit-scrollbar{ height: 8px; }
+.hgraph::-webkit-scrollbar-thumb{ background: #cfcfcf; border-radius: 4px; }
+.hgraph::-webkit-scrollbar-thumb:hover{ background: #a8a8a8; }
+
+.hgraph-grid{
+  display: grid;
+  grid-auto-flow: column;
+  /* 纵向固定：主轴一行 + 4 条 lane，行高不随内容/筛选变化 */
+  grid-template-rows: var(--hgraph-main-row-height) repeat(4, var(--hgraph-row-height));
+  grid-template-columns: var(--hgraph-fixed-col-width);
+  /* 论文列按内容自动定宽（列内最宽的文本框 + 右侧 margin） */
+  grid-auto-columns: auto;
+  width: max-content;
+}
+
+/* 列只是分组，单元格直接参与 grid，保证各列同一 lane 对齐 */
+.hgraph-col{ display: contents; }
+
+.hgraph-node{
+  /* 本格 dot 左边缘的 x：主节点在 0，lane 右移 children-offset */
+  --x: var(--hgraph-children-offset);
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: var(--hgraph-card-vertical-gap) var(--hgraph-card-margin) var(--hgraph-card-vertical-gap) var(--x);
+}
+
+.hgraph-node--main{
+  --x: 0px;
+  margin-bottom: var(--hgraph-main-gap);
+}
+
+/* 空 lane 保持与有内容的格同高 */
+.hgraph-node.is-empty{ min-height: calc(var(--hgraph-card-height) + 2 * var(--hgraph-card-vertical-gap)); }
+
+/* 固定列：横向滚动时停留在左侧，在 margin 结束处直接切断 */
+.hgraph-col--fixed .hgraph-node{
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fff;
+}
+
+/* 主节点叠在 lane 之上：main gap 为负时，下面 lane 的白底不会盖住 dot 和主轴线 */
+.hgraph-node--main{ z-index: 2; }
+.hgraph-col--fixed .hgraph-node--main{ z-index: 4; }
+
+/* 固定列的 sub 区域：白底只盖到按钮右侧一小段 margin，滚动经过的圆点（含放大状态）不被挡住 */
+.hgraph{ --hgraph-fixed-sub-margin: 20px; }
+.hgraph-col--fixed .hgraph-node:not(.hgraph-node--main){
+  background: linear-gradient(
+    to right,
+    #fff calc(100% - var(--hgraph-card-margin) + var(--hgraph-fixed-sub-margin)),
+    transparent 0
+  );
+}
+
+/* 主轴：只有主节点一行横向连通，dot 用白圈遮出 gap */
+.hgraph-node--main::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--hgraph-card-vertical-gap) + var(--hgraph-dot-size) / 2 - var(--hgraph-line-width) / 2);
+  height: var(--hgraph-line-width);
+  background: var(--hgraph-line-color);
+}
+
+/* 第一列从 dot 开始；最后一列到 dot 结束 */
+/* 固定列右端留出与 dot 两侧相同的 gap，滚动时线不会贴着切口 */
+.hgraph-col--fixed .hgraph-node--main::before{ left: var(--x); right: var(--hgraph-line-gap); }
+.hgraph-col.is-last .hgraph-node--main::before{ right: calc(100% - var(--x) - var(--hgraph-dot-size) / 2); }
+
+/* lane：同一列内竖向连接（同 timeline 子树），由 JS 标记 has-up / has-down
+   只有 1 个 dot 时不画线；多个时从第一个连到最后一个，空 lane 直接穿过 */
+.hgraph-node:not(.hgraph-node--main)::before,
+.hgraph-node:not(.hgraph-node--main)::after{
+  content: "";
+  display: none;
+  position: absolute;
+  left: calc(var(--x) + var(--hgraph-dot-size) / 2 - var(--hgraph-line-width) / 2);
+  width: var(--hgraph-line-width);
+  height: calc(50% - var(--hgraph-dot-size) / 2 - var(--hgraph-line-gap));
+  background: var(--hgraph-line-color);
+}
+
+.hgraph-node:not(.hgraph-node--main)::before{ top: 0; }
+.hgraph-node:not(.hgraph-node--main)::after{ bottom: 0; }
+.hgraph-node.has-up::before,
+.hgraph-node.has-down::after{ display: block; }
+.hgraph-node.is-empty::before,
+.hgraph-node.is-empty::after{ height: 50%; }
+
+/* dot：实心；主轴深灰，lane 浅灰 */
+.hgraph-dot{
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: var(--hgraph-dot-size);
+  height: var(--hgraph-dot-size);
+  border-radius: 50%;
+  background: #969696;
+  box-shadow: 0 0 0 var(--hgraph-line-gap) #fff;
+}
+
+/* lane dot 默认空心；可打开卡片的 lane（has-popup）为实心 */
+.hgraph-node:not(.hgraph-node--main) .hgraph-dot{
+  box-sizing: border-box;
+  background: #fff;
+  border: 2px solid #969696;
+}
+.hgraph-node.has-popup .hgraph-dot,
+.hgraph-col--fixed .hgraph-node:not(.hgraph-node--main) .hgraph-dot{ background: #969696; }
+
+.hgraph-node--main .hgraph-dot{ background: #4d4d4d; }
+
+/* 可打开卡片的 lane：同 timeline 的 hover 微放大，点击打开 */
+.hgraph-node.has-popup > .hgraph-term{
+  cursor: pointer;
+  transform-origin: left center;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.hgraph-node.has-popup > .hgraph-term:hover{ transform: scale(1.02); }
+.hgraph-node.is-open .hgraph-dot{ box-shadow: 0 0 0 3px #969696; }
+
+/* 卡片：盖在该 lane 的位置上，最上层（样式同 timeline pop-up card） */
+.hgraph-popup{
+  position: absolute;
+  z-index: 50;
+  box-sizing: border-box;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+.hgraph-popup.is-open{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.hgraph-popup-image{
+  padding: 10px 0 0;
+  width: 96%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+.hgraph-popup-text{
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.8;
+  color: #1f1f1f;
+}
+
+/* 文本框：固定尺寸，位于 dot 右侧、垂直居中；白底盖住线，线统一从框的右边缘出来 */
+.hgraph-term{
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  box-sizing: content-box;
+  width: max-content;
+  min-width: var(--hgraph-paper-card-min-width);
+  max-width: var(--hgraph-paper-card-max-width);
+  /* 标准尺寸，文字多时纵向自适应增长 */
+  min-height: var(--hgraph-card-height);
+  overflow-wrap: anywhere;
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 var(--hgraph-line-gap);
+  padding: 0 var(--hgraph-line-gap) 0 calc(var(--hgraph-dot-to-card-gap) - var(--hgraph-line-gap));
+  background: #fff;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.5;
+  color: #1f1f1f;
+}
+
+/* 主节点：文字在 dot 正上方（与 dot 左对齐），dot 统一贴底对齐，主轴线不经过文字 */
+.hgraph-node--main{
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.hgraph-node--main .hgraph-term{
+  min-height: 0;
+  margin: 0 0 var(--hgraph-line-gap);
+  padding: 0;
+  background: none;
+  font-weight: 600;
+  color: #101010;
+}
+
+
+
+/* 年份：标题右下角的小字（JS 生成） */
+.hgraph-year{
+  align-self: flex-end;
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #969696;
+  white-space: nowrap;
+}
+
+/* 选中 category 时，未选中的 lane 变淡；竖线只有两端 lane 都被选中才保持不变 */
+/* 线（伪元素）不加过渡：伪元素的 opacity 过渡在取消筛选后会卡在变淡状态 */
+.hgraph-dot,
+.hgraph-node > .hgraph-term{
+  transition: opacity 0.18s ease;
+}
+
+.hgraph-node.is-dim .hgraph-dot,
+.hgraph-node.is-dim > .hgraph-term:not(.hgraph-filter),
+.hgraph-node.up-dim::before,
+.hgraph-node.down-dim::after{
+  opacity: 0.25;
+}
+
+/* 固定列（Research）的文本框保持标准宽度 */
+.hgraph-col--fixed .hgraph-term{ width: var(--hgraph-tab-width, var(--hgraph-card-width)); min-width: 0; max-width: none; }
+
+/* 被筛掉的论文列 */
+.hgraph-col.is-hidden{ display: none; }
+
+/* Research 下的 4 个 lane：category tab 样式的多选筛选按钮
+   默认同未选中 tab（黑底、半透明），点亮后同选中 tab；再次点击释放 */
+.hgraph-filter{
+  box-sizing: border-box;
+  width: var(--hgraph-tab-width, var(--hgraph-card-width));
+  white-space: nowrap;
+  height: auto;
+  min-height: 36px;
+  margin: 0 0 0 var(--hgraph-dot-to-card-gap);
+  padding: 6px 16px;
+  justify-content: center;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 200;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.hgraph-filter:hover{ opacity: 0.8; }
+
+.hgraph-filter[aria-pressed="true"]{
+  font-weight: 500;
+  opacity: 1;
+}
+
+.hgraph-filter[aria-pressed="true"]:hover{ opacity: 0.8; }
+
+@media (max-width: 720px){
+  .hgraph{
+    --hgraph-card-width: 140px;
+    --hgraph-card-margin: 48px;
+  }
 }
 
 /* =======================================================================
@@ -876,24 +1243,6 @@ a{ color: inherit; text-decoration: none; }
   align-self: start;
 }
 
-/* thumbs with a hover animation: white play badge in the bottom-left of the still frame */
-.thumb-hover-wrap{
-  position: relative;
-  display: block;
-  align-self: start;
-  width: fit-content;
-}
-.thumb-hover-badge{
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
-  font-size: 22px;
-  color: #fff;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-}
-.thumb-hover-wrap:hover .thumb-hover-badge{ opacity: 0; }
-
 /* - pub-body + pub-text/meta/year */
 /* body stretches to the full row; links are absolutely pinned to its bottom,
    so nothing in the text above (margins, extra lines) can push them */
@@ -937,9 +1286,6 @@ a{ color: inherit; text-decoration: none; }
   font-size: 15px;
   font-weight: 200;
 
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .pub-link ion-icon{ font-size: 17px; }
@@ -953,8 +1299,9 @@ a{ color: inherit; text-decoration: none; }
 - misc-card filtering
 */
 #misc-all:checked ~ .filter-tabs label[for="misc-all"],
-#misc-resources:checked ~ .filter-tabs label[for="misc-resources"],
-#misc-projects:checked ~ .filter-tabs label[for="misc-projects"],
+#misc-research:checked ~ .filter-tabs label[for="misc-research"],
+#misc-course:checked ~ .filter-tabs label[for="misc-course"],
+#misc-advising:checked ~ .filter-tabs label[for="misc-advising"],
 #gal-all:checked ~ .filter-tabs label[for="gal-all"],
 #gal-visual:checked ~ .filter-tabs label[for="gal-visual"],
 #gal-events:checked ~ .filter-tabs label[for="gal-events"],
@@ -965,10 +1312,12 @@ a{ color: inherit; text-decoration: none; }
 
 /* misc list filtering */
 #misc-all:checked ~ .filter-panels .misc-card{ display: block; }
-#misc-projects:checked ~ .filter-panels .misc-card{ display: none; }
-#misc-projects:checked ~ .filter-panels .misc-card[data-category~="projects"]{ display: block; }
-#misc-resources:checked ~ .filter-panels .misc-card{ display: none; }
-#misc-resources:checked ~ .filter-panels .misc-card[data-category~="resources"]{ display: block; }
+#misc-research:checked ~ .filter-panels .misc-card{ display: none; }
+#misc-research:checked ~ .filter-panels .misc-card[data-category~="research"]{ display: block; }
+#misc-course:checked ~ .filter-panels .misc-card{ display: none; }
+#misc-course:checked ~ .filter-panels .misc-card[data-category~="course"]{ display: block; }
+#misc-advising:checked ~ .filter-panels .misc-card{ display: none; }
+#misc-advising:checked ~ .filter-panels .misc-card[data-category~="advising"]{ display: block; }
 
 /* misc
 - page wrapper
@@ -1291,7 +1640,7 @@ a{ color: inherit; text-decoration: none; }
 /* about
 - wrapper
 */
-.about-intro{ padding: 150px 0 90px; }
+.about-intro{ padding: 80px 0 90px; }
 
 /* about
 - grid layout
@@ -1377,17 +1726,6 @@ a{ color: inherit; text-decoration: none; }
   line-height: 1.5;
 }
 
-.about-text a{
-  color: #969696;
-  text-decoration: none;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-}
-
-.about-text a:hover{
-  text-decoration: underline;
-}
-
 /* about
 - contact block (part of about-text / about-links area)
 */
@@ -1427,7 +1765,7 @@ a{ color: inherit; text-decoration: none; }
 /* subpage - page wrapper */
 .subpage{
   background: #fff;
-  padding: calc(70px + 36px) 0 80px;
+  padding: 36px 0 80px;
 }
 
 /* subpage - header */
@@ -1532,11 +1870,6 @@ a{ color: inherit; text-decoration: none; }
   color: #1f1f1f;
 }
 
-.subpage-meta a{
-  color: inherit;
-  text-decoration: underline;
-}
-
 .subpage-links{
   margin-top: 22px;
   display: flex;
@@ -1547,7 +1880,6 @@ a{ color: inherit; text-decoration: none; }
 .subpage-link{
   font-size: 15px;
   font-weight: 200;
-  text-decoration: underline;
 }
 
 .subpage-linkset{
@@ -1563,9 +1895,6 @@ a{ color: inherit; text-decoration: none; }
   gap: 5px;
   font-size: 15px;
   font-weight: 200;
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .subpage-term ion-icon{ font-size: 18px; }
@@ -1672,7 +2001,7 @@ a{ color: inherit; text-decoration: none; }
     --gallery-gap: 10px;
   }
 
-  .about-intro{ padding-top: 130px; }
+  .about-intro{ padding-top: 60px; }
 
   .about-grid{
     grid-template-columns: 1fr;
@@ -1718,7 +2047,7 @@ a{ color: inherit; text-decoration: none; }
   }
 
   /* subpage tablet */
-  .subpage{ padding-top: calc(70px + 28px); }
+  .subpage{ padding-top: 28px; }
 
   .subpage-title{ font-size: 34px; }
 
@@ -1772,7 +2101,7 @@ a{ color: inherit; text-decoration: none; }
   }
 
   .about-intro{
-    padding-top: 120px;
+    padding-top: 50px;
     padding-bottom: 56px;
   }
 

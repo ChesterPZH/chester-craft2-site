@@ -14,7 +14,7 @@
           <ul class="nav-list">
             <li><a href="./index.html" aria-current="page">Home</a></li>
             <li><a href="./craft-square.html">CRAFT^2</a></li>
-            <li><a href="./research.html">Research</a></li>
+            <!-- <li><a href="./research.html">Research</a></li> -->
             <li><a href="./publication.html">Publication</a></li>
             <li><a href="./project.html">Project</a></li>
             <li><a href="./gallery.html">Gallery</a></li>
@@ -26,24 +26,21 @@
 
     <main>
       <section class="hero" aria-label="Intro">
-        <video
-          class="hero-video"
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-          poster="./assets/research/karp/karp-1.webp"
-        >
-          <!-- 若无本地视频，先显示静态 poster -->
-        </video>
-        <div class="hero-overlay" aria-hidden="true"></div>
+        <!-- 循环播放 pub 动图：每张完整播放一遍再切下一张 -->
+        <div class="hero-slides" aria-hidden="true">
+          <img class="hero-slide" data-src="./assets/pub/karp-tn-gif.webp" alt="" />
+          <img class="hero-slide" data-src="./assets/pub/marker-tn-gif.webp" alt="" />
+          <img class="hero-slide" data-src="./assets/pub/rular-tn-git.webp" alt="" />
+          <img class="hero-slide" data-src="./assets/pub/spatialdecode-tn-gif.webp" alt="" />
+          <img class="hero-slide" data-src="./assets/pub/bmi-tn-gif.webp" alt="" />
+          <img class="hero-slide" data-src="./assets/pub/tr-tn-gif.webp" alt="" />
+        </div>
+        <!-- <div class="hero-overlay" aria-hidden="true"></div> -->
         <div class="container hero-content">
           <p class="hero-text">
-            <strong>Toward Spatial Intelligence:</strong>
-
-            Integrating wearable spatial computing with closed-loop multimodal AI to mediate human cognition and perception, 
-            enabling adaptive and reciprocal interaction in space.
+            <strong>Toward Spacetime Transcendency</strong>
+            <br>
+            By modeling contexts and returning super-empirical manifestation and materialization, spatial computers let users and their environments within situations reciprocally perceive, comprehend, and intervene, transcending originary human situatedness in spacetime.
           </p>
         </div>
       </section>
@@ -52,93 +49,176 @@
         <div class="container">
           <br><br>
 
-          <div class="content-duo" style="--content-direction: row-reverse; --content-gap: 50px; --content-img-align: center; --content-text-align: start; --content-img-size: 500px;">
+          <div class="content-duo" style="--content-direction: row; --content-gap: 90px; --content-img-align: center; --content-text-align: center; --content-img-size: 250px; --content-img-ratio: 1; --content-img-fit: cover; --content-img-radius: 50%;">
             <div class="content-img-wrap">
-              <img class="content-img" src="./assets/home/111.png" alt="Spatial computing research" loading="lazy" />
+              <img class="content-img" src="./assets/home/photo.webp" alt="Chester (Zhaohan) Pan" />
             </div>
-              <div class="content-text">
-                Last-generation computers are designed for abstract I/O, so the interactivity and 
-                functionality of their interfaces are constrained by such hardware-softwares systems. With the emerging of 
-                <strong>new-generation hardware</strong> and <strong>AI technologies</strong>, computer interfaces are expect to become more capable of 
-                <strong>intelligently and augmentatively conducting the I/O system</strong>, supporting richer user activity beyond leveraging computers 
-                as only tools.
-
-                <br><br>
-                
-                Human beings are inherently and intrinsically situated within a <strong>spatial world</strong>.
-                "<em>Towards our goal of more human centered computing, we believe that interaction must be grounded in the physical 
-                world and leverage our innate abilities for spatial cognition</em>" — SHAPE Lab. Future interface should be
-                <strong>embeded within physical spaces</strong> where people act and collaborate, enabling interaction and computation <strong>in-situ</strong>.
-              </div>
-            </div>
-          <br>
-          <hr class="content-divider" />
-          <h2 class="content-title">Vision</h2>
-
-          <div class="content-duo" style="--content-direction: row; --content-gap: 24px; --content-img-align: center; --content-text-align: center; --content-img-size: 280px;">
-            <!-- <div class="content-img-wrap">
-              <img class="content-img" src="./assets/pub/karp-tn.webp" alt="Spatial computing research" loading="lazy" />
-            </div> -->
-            <div class="content-text">
-              Our research aims to develop tools and applications of Human-Computer interfaces that build on <strong>new spatial hardware 
-              platforms</strong><sup>1</sup>, powered by <strong>mathematical algorithms</strong><sup>2</sup> and <strong>AI 
-              modeling</strong><sup>3</sup>. Our implementations are envisioned to intelligently and adaptively engage human 
-              <strong>cognition and perception</strong><sup>4</sup> in the interaction loop, both <strong>leveraging and mediating</strong><sup>5</sup>, 
-              to ultimately facilitate the users' concurrent real-world activities.
-            </div>
+            <p class="content-text">
+              Zhaohan (Chester) Pan is a Human-Computer Interaction researcher, designer, and educator. He received his M.S. in Mechanical
+              Engineering from <strong>Stanford University</strong>🌲, where he worked in the SHAPE Lab, and his B.S. in Civil Engineering,
+              <em>magna cum laude</em>, from the <strong>University of Washington</strong>🌸. He is the director of the <strong>CRAFT^2</strong>
+              Lab team, a core organizer & academic advisor of the <strong>Fab City High School</strong> program, and has advised numerous undergraduate
+              & high school students with great commitment. His academic work has been published in venues such as <strong>ACM DIS, ACM VRST, and IEEE ISMAR</strong>.
+              <br></br>
+              <a href="./about.html">Click here for more details about his experience</a>
+            </p>
           </div>
 
           <br><br>
-          
-          <div class="content-prose" style="--content-text-align: end; --content-text-size: 60%;">
-            <p class="content-text sub-prose">
-              1. Primarily commercial head-worn visual interfaces: HMD, smart glasses. Portable ubiquitous devices or other 
-              customized spatial-aware electro-mechanical hardware systems.
+          <br><br>
+
+          <hr class="content-divider" />
+          <h2 class="content-title">Research Theme</h2>
+
+          <div class="content-prose" style="--content-text-align: center; --content-text-size: 100%;">
+            <p class="content-text">
+              Chester's research is situated in the <strong>Extended Reality (XR)</strong> area with <strong>spatial computing</strong>, focusing more specifically on passthrough <strong>Mixed / Augmented Reality (MR / AR)</strong> devices, and uses <strong>Computer Vision (CV)</strong>, <strong>multimodal AI</strong>, and spatial <strong>Computer Graphics (CG)</strong> to envision new Human-Computer Interactions. This theme unfolds as follows:
+            </p>
+          </div>
+
+          <br><br>
+
+          <div class="content-prose" style="--content-text-align: center; --content-text-size: 88%;">
+            <p class="content-text">
+              <strong>XR Terminology Concepts</strong>: Proposing new concepts that expand how XR is defined and articulate new immersive experiences, with potential knowledge and inspiration drawn from adjacent fields. 
+              
               <br><br>
-              2. Engineering modeling approaches: optimization, decision making processes, etc.
+
+              <strong>MR Head-Mounted Display Systems</strong>: Building on commodity standalone MR devices, leveraging their specialized sensing and rendering capacities as novel Input<sup>1</sup> / Output<sup>2</sup> channels for envisioning ubiquitously situated interactions in the future.
+             
               <br><br>
-              3. Multimodal language models (conversational, vision-language), computer vision (pattern recognition, scene 
-              reconstruction, pose tracking), generative models (2D, 3D diffusion), neural rendering (NeRF, 3DGS), etc, or 
-              self-trained models.
-              <br><br>
-              4. Cognition: memory, attention, reasoning etc. Perception: stereo vision, depth perception, spatial senses, etc.
-              <br><br>
-              5. Direct interactive capability in space in-situ, and indirect mediate interaction through sensorimotor control, 
-              mental modeling, sensory illusions, etc.
+
+              <strong>MR with Robotics and Controlled Mechatronics</strong>: Coupling MR with concurrent and companion mechatronics and robotics, extending how users perceive, comprehend, and intervene in the physical world through deeper and materialized interactions.
             </p>
           </div>
 
           <br>
+
+          <div class="content-prose" style="--content-text-align: end; --content-text-size: 60%;">
+            <p class="content-text sub-prose">
+              <sup>1</sup> human user inputs: eye tracking, hand tracking, etc.; environmental inputs: scene modeling and reconstruction, multimodal labeled segmentation & object tracking, etc.
+              <br>
+              <sup>2</sup> spatial manifestations of graphical treatments in different combinations of passthrough and virtuality, e.g., spatially anchored simulations and diminished synthesis for hiding elements
+            </p>
+          </div>
+
+          <br><br>
+          <br><br>
+
+          <h2 class="content-title">Special Vision - Temporality</h2>
+
+          <div class="content-prose" style="--content-text-align: center; --content-text-size: 100%;">
+            <p class="content-text">
+              Spatial computing emerged from the desire to move past WIMP<sup>3</sup> and embed computing back into space, the fundamental dimension of human existence.
+              Beyond the explicit <strong>spatiality</strong><sup>4</sup>, human life also unfolds — although more implicitly — continuously over time, and is thereby equally bound to <strong>temporality</strong><sup>5</sup>. Chester's vision leverages the established capabilities of spatial computing and pivots them toward temporality as an equal dimension of experience. Specifically, 
+            </p>
+          </div>
+
+          <br>
+
+          <div class="content-prose" style="--content-text-align: end; --content-text-size: 60%;">
+            <p class="content-text sub-prose">
+              <sup>3</sup> windows, icons, menus, pointer. <em>A. van Dam. 1997. Post-WIMP User Interfaces. Communications of the ACM 40, 2 (February 1997), 63-67</em>
+               <br>
+              <sup>4</sup> layout and distribution of entities as attributes of space, stereo vision (depth) and first-person POV perception, motion and movement capability, adjunct attributes (e.g., situated entity semantics), etc.
+               <br>
+              <sup>5</sup> practical and theoretical attributes of time, perception of temporal progression (flow or shifting), active navigation capability & passive indication, adjunct attributes (e.g., causality), etc.
+            </p>
+          </div>
+
+          <br><br>
+          <br><br>
+
+          <hr class="content-divider" />
+          <h2 class="content-title">Research Roadmap</h2>
+
+
+          <div class="hgraph" role="region" aria-label="Research progress" tabindex="0">
+            <div class="hgraph-grid">
+              <div class="hgraph-col hgraph-col--fixed">
+                <p class="hgraph-title">Theme & Vision</p>
+                <button type="button" data-lane="a">XR Concepts</button>
+                <button type="button" data-lane="b">MR HMD Systems</button>
+                <button type="button" data-lane="c">MR w/ Robots</button>
+                <button type="button" data-lane="d">Temporality</button>
+              </div>
+
+              <div class="hgraph-col" data-year="2025">
+                <p class="hgraph-title">rulAR</p>
+                <p data-lane="b" data-popup-image="./assets/home/rular-b.webp">rulAR leverages real-time scene reconstruction resources and optimization algorithms to intelligently label measurement-critical spatial points for users.</p>
+                <p data-popup-for="b">The raw scene plane meshes are synthesized into approximated complete rectangles using a two-step optimization process. Based on the processed scene, immersive visualization and intelligent labeling are delivered.</p>
+              </div>
+
+              <div class="hgraph-col" data-year="2026">
+                <p class="hgraph-title">Spatiality Decoder</p>
+                <p data-lane="b" data-popup-image="./assets/home/spatialdecode-b.webp">Spatiality Decoder enables real-time capturing using hand gestures, hides the computational synthesis process under an animation metaphor, and then delivers an inhabitable scene in situ.</p>
+                <p data-popup-for="b">Users naturally capture photographic images in the scene using a finger-frame gesture, and the system automatically processes and synthesizes them into 3D Gaussian Splats. All the computational processing hides behind a tearing-frame metaphor.</p>
+              </div>
+
+              <div class="hgraph-col" data-year="2026">
+                <p class="hgraph-title">Transcendent Reality</p>
+                <p data-lane="a">Transcendent Reality proposes the concept of constructing spacetime as one unified substrate for virtual-real coupling expression, delivering spatial manifestation over the temporal continuum.</p>
+                <p data-lane="b" data-popup-image="./assets/home/tr-b.webp">The system, Reality Transcender, demonstrates experiences of the concept across natural and artificial domains in three daily scenarios.</p>
+                <p data-popup-for="b">Two scenarios, solar & shadow and popularity, are demonstrated here. The user "travels across time" to experience realities that transcend the actual present. Manifestations are perceived with as little effort as content occurring in actuality, preserving full information modality.</p>
+                <p data-lane="d" data-popup-image="./assets/home/tr-d.webp">Transcendent Reality embodies the notion of the temporal continuum: the time aspect within space-time continuum theories, which is as real and as uniform as space.</p>
+                <p data-popup-for="d">The schematic narrates the structure of realities unfolding around the concept: space and time form a unified substrate, and content happens inside it. Such uniform and non-directional modeling of time diminishes (but does not negate) empirical temporal attributes (e.g., causality and the flow of time), envisioning interface-enabled capabilities as super-empirical experiences.</p>
+              </div>
+
+              <div class="hgraph-col" data-year="2026">
+                <p class="hgraph-title">Beyond Motion Intent</p>
+                <p data-lane="b" data-popup-image="./assets/home/bmi-b.webp">The system provides visualization elements for daily-encountered mobile robots, including behavioral intents and decision-making-dependent spatial mapping.</p>
+                <p data-popup-for="b">Visualization designs include forward pathing, a social cost zone, and a safety-stop zone. Users observe pattern changes according to changes in the proxemic situation. Designs are created and evaluated to provide spontaneous apprehension without the need for explanation.</p>
+                <p data-lane="c" data-popup-image="./assets/home/bmi-c.webp">The mobile robot is implemented with a real navigation algorithm, simulating readily deployable human-robot interaction situations.</p>
+                <p data-popup-for="c">The simulated robot is controlled through ROS2 and deployed in a reconstructed Unity scene, behaving as if it were actually deployed in the hallway.</p>
+                <p data-lane="d">The system aims to address short-term future decision-making for users with proxemic transparency in encounter scenarios.</p>
+              </div>
+
+            </div>
+          </div>
+
+          <br><br>
+          <br><br>
+          
           <hr class="content-divider" />
           <h2 class="content-title">Press and Events</h2>
 
           <div class="misc-cards-grid">
             <article class="misc-card">
-              <a class="misc-card-link" href="https://fablabs.asia/fan2025/program" target="_blank" rel="noreferrer noopener">
-                <img class="misc-card-image" src="./assets/dummy.png" alt="" loading="lazy" />
+              <a class="misc-card-link" href="https://fab.city/learning-hub/resource-fab-city-high-school-challenge-shenzhen" target="_blank" rel="noreferrer noopener">
+                <img class="misc-card-image" src="./assets/home/fcc26.webp" alt="Fab City High School Challenge 2026" loading="lazy" />
                 <div class="misc-card-body">
-                  <h2 class="misc-card-title">Fab Asian Network 2025 talk</h2>
-                  <p class="misc-card-meta">Outreach and presentation at FAN event</p>
+                  <h2 class="misc-card-title">Fab City High School Challenge, '26 summer</h2>
+                  <p class="misc-card-meta">Rejoining the 3rd FCC HS · Addressing local biodiversity</p>
+                  <p class="misc-card-year">2026</p>
+                </div>
+              </a>
+            </article>
+            <article class="misc-card">
+              <a class="misc-card-link" href="https://fablabs.asia/fan2025/program" target="_blank" rel="noreferrer noopener">
+                <img class="misc-card-image" src="./assets/home/fan25.webp" alt="Fab Asia Network 2025 talk" loading="lazy" />
+                <div class="misc-card-body">
+                  <h2 class="misc-card-title">Fab Asia Network 2025 talk</h2>
+                  <p class="misc-card-meta">Outreach and presentation at FAN event · Demonstrating spatial computing</p>
                   <p class="misc-card-year">2025</p>
                 </div>
               </a>
             </article>
             <article class="misc-card">
               <a class="misc-card-link" href="https://fab.city/challenge/fab-city-challenge-shenzhen-2024">
-                <img class="misc-card-image" src="./assets/home/fcc.jpg" alt="Fab City Challenge demo" loading="lazy" />
+                <img class="misc-card-image" src="./assets/home/fcc24.webp" alt="Fab City High School Challenge 2024" loading="lazy" />
                 <div class="misc-card-body">
-                  <h2 class="misc-card-title">Fab City Challenge demo</h2>
-                  <p class="misc-card-meta">Fab Foundation's global network event</p>
+                  <h2 class="misc-card-title">Fab City High School Challenge, '24 summer</h2>
+                  <p class="misc-card-meta">Attending the 1st annual event as an advisor · Presentation at Shenzhen Library</p>
                   <p class="misc-card-year">2024</p>
                 </div>
               </a>
             </article>
             <article class="misc-card">
               <a class="misc-card-link" href="https://www.ce.washington.edu/news/article/2022-07-05/third-annual-boeing-capstone" target="_blank" rel="noreferrer noopener">
-                <img class="misc-card-image" src="./assets/home/boeing.jpg" alt="Third annual Boeing capstone" loading="lazy" />
+                <img class="misc-card-image" src="./assets/home/boeing.webp" alt="Third annual Boeing capstone" loading="lazy" />
                 <div class="misc-card-body">
                   <h2 class="misc-card-title">Third annual Boeing capstone</h2>
-                  <p class="misc-card-meta">UW CEE Capstone Project</p>
+                  <p class="misc-card-meta">UW CEE Capstone · Boeing-sponsored project</p>
                   <p class="misc-card-year">2022</p>
                 </div>
               </a>

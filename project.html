@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Chester | CRAFT^2</title>
+    <title>Chester | Project</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -14,7 +14,7 @@
           <ul class="nav-list">
             <li><a href="./index.html">Home</a></li>
             <li><a href="./craft-square.html">CRAFT^2</a></li>
-            <li><a href="./research.html">Research</a></li>
+            <!-- <li><a href="./research.html">Research</a></li> -->
             <li><a href="./publication.html">Publication</a></li>
             <li><a href="./project.html" aria-current="page">Project</a></li>
             <li><a href="./gallery.html">Gallery</a></li>
@@ -25,7 +25,7 @@
     </header>
 
     <main>
-      <section class="hero" aria-label="Intro">
+      <!-- <section class="hero" aria-label="Intro">
         <video
           class="hero-video"
           autoplay
@@ -33,9 +33,8 @@
           loop
           playsinline
           preload="auto"
-          poster="./assets/research/karp/karp-1.webp"
         >
-          <!-- 无本地视频时，仅展示封面图 -->
+          (无本地视频时，仅展示封面图)
         </video>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="container hero-content">
@@ -43,7 +42,7 @@
             Something about projects?
           </p>
         </div>
-      </section>
+      </section> -->
 
       <section class="publication-section" aria-label="Project Content">
         <div class="container">
@@ -57,24 +56,15 @@
               checked
             />
 
-            <input
-              class="filter-radio"
-              type="radio"
-              name="misc-category"
-              id="misc-projects"
-            />
-
-            <input
-              class="filter-radio"
-              type="radio"
-              name="misc-category"
-              id="misc-resources"
-            />
+            <input class="filter-radio" type="radio" name="misc-category" id="misc-research" />
+            <input class="filter-radio" type="radio" name="misc-category" id="misc-course" />
+            <input class="filter-radio" type="radio" name="misc-category" id="misc-advising" />
 
             <div class="filter-tabs" role="tablist" aria-label="Project Categories">
               <label for="misc-all">All Categories</label>
-              <label for="misc-projects">Projects</label>
-              <label for="misc-resources">Resources</label>
+              <label for="misc-research">Research Projects</label>
+              <label for="misc-course">Course Projects</label>
+              <label for="misc-advising">Tutoring & Advising</label>
             </div>
 
             <input class="filter-radio" type="radio" name="misc-contributor" id="misc-contrib-all" checked />
@@ -82,7 +72,7 @@
             <input class="filter-radio" type="radio" name="misc-contributor" id="misc-contrib-personal" />
 
             <div class="filter-tabs filter-tabs--contributor" role="tablist" aria-label="Contributor">
-              <label for="misc-contrib-all">All teams</label>
+              <label for="misc-contrib-all">All Teams</label>
               <label for="misc-contrib-craft2">CRAFT^2</label>
               <label for="misc-contrib-personal">Personal</label>
             </div>
@@ -92,17 +82,17 @@
               <hr class="content-divider" />
 
               <div class="misc-cards-grid">
-                <article class="misc-card" data-category="resources" data-contributor="craft2">
-                  <a class="misc-card-link" href="./pages/ios-ar-tracking-template-app.html">
-                    <img class="misc-card-image" src="./assets/proj/iosar-tn.webp" alt="iOS AR Tracking Template App" loading="lazy" />
+                <article class="misc-card" data-category="advising" data-contributor="personal">
+                  <a class="misc-card-link" href="https://litcheelab.super.site/fab-city-challenge-high-school/fab-city-challenge-high-school-2026/augmenting-biodiversity" target="_blank" rel="noreferrer noopener">
+                    <img class="misc-card-image" src="./assets/proj/fcc26.webp" alt="Personal BioPedia" loading="lazy" />
                     <div class="misc-card-body">
-                      <h2 class="misc-card-title">iOS AR Tracking Template App</h2>
-                      <p class="misc-card-meta">ARKit · OpenCV · Pose Tracking</p>
+                      <h2 class="misc-card-title">Personal BioPedia</h2>
+                      <p class="misc-card-meta">Zero-shot CV Model · iOS App Prototyping</p>
                       <p class="misc-card-year">2026</p>
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects" data-contributor="personal">
+                <article class="misc-card" data-category="course" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1VoMmLpnHU--84Q5jd8K3PnlZL7vivQBt/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/proj/3dpc-tn.webp" alt="Defect Detection via Local-Patch Comparison" loading="lazy" />
                     <div class="misc-card-body">
@@ -112,17 +102,28 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects" data-contributor="personal">
-                  <a class="misc-card-link" href="https://drive.google.com/file/d/1JJUSq4itv0EYDZm_So3eM3zBsph3HtLY/view?usp=sharing" target="_blank" rel="noreferrer noopener">
-                    <img class="misc-card-image" src="./assets/proj/echo-tn.webp" alt="A 3D-games AI Assistant for BLV Players" loading="lazy" />
+                <article class="misc-card" data-category="" data-contributor="">
+                  <a class="misc-card-link" href="./pages/sonification-modeling.html">
+                    <img class="misc-card-image" src="./assets/proj/sonification-tn.webp" alt="Sonification Modeling for Non-visual Graphical Exploration" loading="lazy" />
                     <div class="misc-card-body">
-                      <h2 class="misc-card-title">A 3D-games AI Assistant for BLV Players</h2>
+                      <h2 class="misc-card-title">Sonification Modeling for Non-visual Graphical Exploration</h2>
+                      <p class="misc-card-meta"></p>
+                      <p class="misc-card-year">2025</p>
+                    </div>
+                  </a>
+                </article>
+
+                <article class="misc-card" data-category="course" data-contributor="personal">
+                  <a class="misc-card-link" href="https://drive.google.com/file/d/1JJUSq4itv0EYDZm_So3eM3zBsph3HtLY/view?usp=sharing" target="_blank" rel="noreferrer noopener">
+                    <img class="misc-card-image" src="./assets/proj/echo-tn.webp" alt="A 3D Game AI Assistant for BLV Players" loading="lazy" />
+                    <div class="misc-card-body">
+                      <h2 class="misc-card-title">A 3D Game AI Assistant for BLV Players</h2>
                       <p class="misc-card-meta">Accessibility · Game Development</p>
                       <p class="misc-card-year">2025</p>
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects" data-contributor="personal">
+                <article class="misc-card" data-category="course" data-contributor="personal">
                   <a class="misc-card-link" href="https://charm.stanford.edu/ME327/2024-Group7" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/proj/caligraphy-tn.webp" alt="Calligraphy Training Device" loading="lazy" />
                     <div class="misc-card-body">
@@ -132,7 +133,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects" data-contributor="personal">
+                <article class="misc-card" data-category="course" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1PbeKH4Vahs31snNXCpyP9uwYzQWMvDQm/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/proj/optimization-tn.webp" alt="Infill Pattern Design Optimization for FDM" loading="lazy" />
                     <div class="misc-card-body">
@@ -142,7 +143,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects" data-contributor="craft2">
+                <article class="misc-card" data-category="research" data-contributor="craft2">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/16dfAEJCa-hqpLhporrtTp1ZaevW-SHKF/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/proj/musicbox-tn.webp" alt="Customizable and Interactive Music Box" loading="lazy" />
                     <div class="misc-card-body">
@@ -152,7 +153,7 @@
                     </div>
                   </a>
                 </article>
-                <article class="misc-card" data-category="projects" data-contributor="personal">
+                <article class="misc-card" data-category="research" data-contributor="personal">
                   <a class="misc-card-link" href="https://drive.google.com/file/d/1bhq3MzWN4AR0gq9yb9_4y7QciVyRISvC/view?usp=sharing" target="_blank" rel="noreferrer noopener">
                     <img class="misc-card-image" src="./assets/proj/fdmpeek-tn.webp" alt="FDM PEEK Mechanics Characterization" loading="lazy" />
                     <div class="misc-card-body">
