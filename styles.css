@@ -41,6 +41,9 @@ a{ color: inherit; text-decoration: none; }
 
 /* unified underlined text links (prose, about, publication, subpages) */
 :root{
+  /* 全站统一的动画时长 / 缓动：hover、展开、淡入淡出都用它 */
+  --anim-duration: 0.2s;
+  --anim-ease: ease;
   --link-color: #000;
   --link-underline: #d0d0d0;
 }
@@ -55,7 +58,7 @@ a{ color: inherit; text-decoration: none; }
   text-decoration-color: var(--link-underline);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s ease;
+  transition: text-decoration-color var(--anim-duration) var(--anim-ease);
 }
 .content-text a:hover,
 .about-text a:hover,
@@ -224,6 +227,7 @@ a{ color: inherit; text-decoration: none; }
 
 /* - brand */
 .brand{
+  white-space: nowrap;
   font-size: 23px;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -267,6 +271,65 @@ a{ color: inherit; text-decoration: none; }
   background: currentColor;
   opacity: 0.7;
   flex-shrink: 0;
+}
+
+/* compact nav: when the tabs don't fit next to the brand, only the current tab shows,
+   with the chevron (same as the filter rows) on its left; it opens a dropdown of the other pages.
+   JS adds .is-compact / .is-open on the header, and the toggle + dropdown elements. */
+.nav-fold-toggle,
+.nav-fold-label,
+.nav-dropdown{ display: none; }
+
+.site-header.is-compact nav{
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+/* very narrow screens: the brand may wrap so the current tab never gets cut */
+.site-header.is-compact .brand{ white-space: normal; min-width: 0; line-height: 1.15; }
+.site-header.is-compact .nav-fold-toggle{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+.nav-fold-toggle ion-icon{ transition: transform var(--anim-duration) var(--anim-ease); }
+.site-header.is-open .nav-fold-toggle ion-icon{ transform: rotate(90deg); }
+.site-header.is-compact .nav-fold-label{
+  display: inline;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.site-header.is-compact .nav-list li:not(:has(> a[aria-current="page"])){ display: none; }
+.site-header.is-compact .nav-list li::before{ display: none; }
+
+.site-header.is-compact.is-open .nav-dropdown{
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 180px;
+  padding: 14px 20px 18px 24px;
+  background: #000;
+  border-bottom-left-radius: 6px;
+}
+.nav-dropdown a{
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.2;
+  color: #fff;
 }
 
 /* current page state */
@@ -322,8 +385,8 @@ a{ color: inherit; text-decoration: none; }
   object-fit: cover;
   opacity: 0;
   /* 淡入淡出时长：前后两段各占一半 */
-  --hero-fade: 0.4s;
-  transition: opacity var(--hero-fade) ease-in-out;
+  --hero-fade: var(--anim-duration);
+  transition: opacity var(--hero-fade) var(--anim-ease);
 }
 
 .hero-slide.is-active{ opacity: 1; }
@@ -485,7 +548,7 @@ a{ color: inherit; text-decoration: none; }
   border: 2px solid transparent;
   transform: translate(-50%, -50%);
   z-index: 2;
-  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: background-color var(--anim-duration) var(--anim-ease), border-color var(--anim-duration) var(--anim-ease), box-shadow var(--anim-duration) var(--anim-ease);
 }
 
 /* 主树默认 dot：深灰描边，内部镂空（白底） */
@@ -534,7 +597,7 @@ a{ color: inherit; text-decoration: none; }
   padding: 0;
   background: #fff;
   /* hover 时整体微缩放，logo+文字一起等比例放大 */
-  transition: transform 0.18s ease;
+  transition: transform var(--anim-duration) var(--anim-ease);
 }
 
 /* 带 pop-up 的时间轴卡片增加轻微弹出效果 */
@@ -573,6 +636,7 @@ a{ color: inherit; text-decoration: none; }
   visibility: hidden;
   pointer-events: none;
   z-index: 5;
+  transition: opacity var(--anim-duration) var(--anim-ease), visibility var(--anim-duration) var(--anim-ease);
 }
 
 .timeline:has(> .timeline-popups) .timeline-popups .pop-up-card.is-open{
@@ -621,6 +685,45 @@ a{ color: inherit; text-decoration: none; }
   .timeline:has(> .timeline-popups) .timeline-popups .pop-up-card.is-open{
     display: block;
   }
+}
+
+/* 窄屏：卡片直接盖在被点的那一行上（同 roadmap 的卡片），JS 负责定位 */
+.timeline .pop-up-card--overlay{
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--anim-duration) var(--anim-ease), visibility var(--anim-duration) var(--anim-ease);
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+.timeline .pop-up-card--overlay.is-open{ opacity: 1; visibility: visible; pointer-events: auto; }
+
+.timeline .pop-up-card--overlay .pop-up-card-image{
+  padding: 10px 0 0;
+  width: 96%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.timeline .pop-up-card--overlay .pop-up-card-text{
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 1.8;
+  color: #1f1f1f;
 }
 
 .timeline-card-logo{
@@ -849,13 +952,19 @@ a{ color: inherit; text-decoration: none; }
 .hgraph-node.has-popup .hgraph-dot,
 .hgraph-col--fixed .hgraph-node:not(.hgraph-node--main) .hgraph-dot{ background: #969696; }
 
-.hgraph-node--main .hgraph-dot{ background: #4d4d4d; }
+/* 主节点 dot：默认空心；title 带链接（has-link）时实心 */
+.hgraph-node--main .hgraph-dot{
+  box-sizing: border-box;
+  background: #fff;
+  border: 2px solid #4d4d4d;
+}
+.hgraph-node--main.has-link .hgraph-dot{ background: #4d4d4d; }
 
 /* 可打开卡片的 lane：同 timeline 的 hover 微放大，点击打开 */
 .hgraph-node.has-popup > .hgraph-term{
   cursor: pointer;
   transform-origin: left center;
-  transition: transform 0.18s ease, opacity 0.18s ease;
+  transition: transform var(--anim-duration) var(--anim-ease), opacity var(--anim-duration) var(--anim-ease);
 }
 .hgraph-node.has-popup > .hgraph-term:hover{ transform: scale(1.02); }
 .hgraph-node.is-open .hgraph-dot{ box-shadow: 0 0 0 3px #969696; }
@@ -877,7 +986,7 @@ a{ color: inherit; text-decoration: none; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.18s ease, visibility 0.18s ease;
+  transition: opacity var(--anim-duration) var(--anim-ease), visibility var(--anim-duration) var(--anim-ease);
 }
 .hgraph-popup.is-open{
   opacity: 1;
@@ -932,6 +1041,8 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .hgraph-node--main .hgraph-term{
+  /* 年份与 title 底部（基线）对齐 */
+  align-items: baseline;
   min-height: 0;
   margin: 0 0 var(--hgraph-line-gap);
   padding: 0;
@@ -944,11 +1055,11 @@ a{ color: inherit; text-decoration: none; }
 
 /* 年份：标题右下角的小字（JS 生成） */
 .hgraph-year{
-  align-self: flex-end;
+  align-self: baseline;
   margin-left: 8px;
   font-size: 12px;
   font-weight: 300;
-  line-height: 1.6;
+  line-height: 1;
   color: #969696;
   white-space: nowrap;
 }
@@ -957,7 +1068,7 @@ a{ color: inherit; text-decoration: none; }
 /* 线（伪元素）不加过渡：伪元素的 opacity 过渡在取消筛选后会卡在变淡状态 */
 .hgraph-dot,
 .hgraph-node > .hgraph-term{
-  transition: opacity 0.18s ease;
+  transition: opacity var(--anim-duration) var(--anim-ease);
 }
 
 .hgraph-node.is-dim .hgraph-dot,
@@ -969,6 +1080,9 @@ a{ color: inherit; text-decoration: none; }
 
 /* 固定列（Research）的文本框保持标准宽度 */
 .hgraph-col--fixed .hgraph-term{ width: var(--hgraph-tab-width, var(--hgraph-card-width)); min-width: 0; max-width: none; }
+
+/* lane 名称标签：只在手机竖排时显示（JS 生成） */
+.hgraph-lane-tag{ display: none; }
 
 /* 被筛掉的论文列 */
 .hgraph-col.is-hidden{ display: none; }
@@ -995,7 +1109,7 @@ a{ color: inherit; text-decoration: none; }
   cursor: pointer;
   user-select: none;
   opacity: 0.6;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--anim-duration) var(--anim-ease);
 }
 
 .hgraph-filter:hover{ opacity: 0.8; }
@@ -1113,7 +1227,7 @@ a{ color: inherit; text-decoration: none; }
   font-size: 20px;
   cursor: pointer;
 }
-.filter-fold-toggle ion-icon{ transition: transform 0.2s ease; }
+.filter-fold-toggle ion-icon{ transition: transform var(--anim-duration) var(--anim-ease); }
 .filter-tabs--fold.is-open .filter-fold-toggle ion-icon{ transform: rotate(90deg); }
 .filter-fold-slot{ display: flex; }
 .filter-fold-pool{
@@ -1158,7 +1272,7 @@ a{ color: inherit; text-decoration: none; }
 /* hover: unselected tab darkens halfway between gray (0.6) and black (1); the selected tab is untouched
    (its id-based :checked rule outranks this) */
 .filter-tabs label,
-.craft2-tabs label{ transition: opacity 0.15s ease; }
+.craft2-tabs label{ transition: opacity var(--anim-duration) var(--anim-ease); }
 .filter-tabs label:hover,
 .craft2-tabs label:hover{ opacity: 0.8; }
 
@@ -1350,7 +1464,7 @@ a{ color: inherit; text-decoration: none; }
   background: #fff;
   overflow: hidden;
   /* hover 时整体微缩放，制造“中心放大”的感觉 */
-  transition: transform 0.18s ease;
+  transition: transform var(--anim-duration) var(--anim-ease);
 }
 
 .misc-card:hover{
@@ -1542,7 +1656,7 @@ a{ color: inherit; text-decoration: none; }
 
 /* 有链接的卡片：整体 hover 放大，与 misc-card 一致 */
 .member-card:has(.member-card-link){
-  transition: transform 0.18s ease;
+  transition: transform var(--anim-duration) var(--anim-ease);
 }
 .member-card:has(.member-card-link):hover{
   transform: scale(1.03);
@@ -1678,6 +1792,14 @@ a{ color: inherit; text-decoration: none; }
 /* about
 - about-links
 */
+.about-foot{
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  grid-template-areas: "contact links";
+  align-items: end;
+  margin-top: 24px;
+}
+
 .about-links-bar{
   grid-area: links;
   display: flex;
@@ -1688,8 +1810,9 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .about-tab-link{
-  flex: 1 1 0;
-  min-width: 0;
+  /* 固定尺寸：任何屏幕宽度下大小、字号都不变 */
+  flex: 0 0 180px;
+  width: 180px;
 
   display: inline-flex;
   align-items: center;
@@ -1705,7 +1828,7 @@ a{ color: inherit; text-decoration: none; }
   background: #000;
   color: #fff;
   text-decoration: none;
-  transition: opacity 0.2s;
+  transition: opacity var(--anim-duration) var(--anim-ease);
 }
 
 .about-tab-link:hover{ opacity: 0.85; }
@@ -1967,18 +2090,14 @@ a{ color: inherit; text-decoration: none; }
   }
 
   .nav-shell{
-    min-height: auto;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 12px 20px;
+    gap: 24px;
+    padding: 0 20px;
   }
 
   .brand{ font-size: 24px; }
 
   .nav-list{
     width: auto;
-    max-width: 100%;
-    flex-wrap: wrap;
     gap: 0;
   }
 
@@ -2003,23 +2122,13 @@ a{ color: inherit; text-decoration: none; }
 
   .about-intro{ padding-top: 60px; }
 
-  .about-grid{
+  .about-foot{
     grid-template-columns: 1fr;
     grid-template-areas:
-      "photo"
-      "text"
       "links"
       "contact";
-    column-gap: 0;
     row-gap: 28px;
   }
-
-  .about-photo-wrap{
-    width: 260px;
-    height: 260px;
-  }
-
-  .about-text{ font-size: 21px; }
 
   /* publication tablet */
   .pub-item{
@@ -2046,6 +2155,14 @@ a{ color: inherit; text-decoration: none; }
     width: 100%;
   }
 
+  /* home photo: keep its own size, centered */
+  .content-duo.content-duo--keep-img .content-img-wrap{
+    flex: 0 0 auto !important;
+    width: var(--content-img-size);
+    max-width: 100%;
+    align-self: center;
+  }
+
   /* subpage tablet */
   .subpage{ padding-top: 28px; }
 
@@ -2057,6 +2174,11 @@ a{ color: inherit; text-decoration: none; }
   }
 
   .subpage-vrule{ display: none; }
+
+  .subpage-head--text-meta .subpage-top-left,
+  .subpage-head--text-meta .subpage-top-right{ grid-column: auto; }
+
+  .subpage-lede{ padding-left: 0; }
 
   .subpage-head--media-left .subpage-top,
   .subpage-head--media-right .subpage-top{
@@ -2105,15 +2227,6 @@ a{ color: inherit; text-decoration: none; }
     padding-bottom: 56px;
   }
 
-  .about-photo-wrap{
-    width: 210px;
-    height: 210px;
-  }
-
-  .about-text{
-    font-size: 17px;
-    line-height: 1.45;
-  }
 
   /* publication phone */
   .filter-tabs label{ font-size: 14px; }
@@ -2143,6 +2256,142 @@ a{ color: inherit; text-decoration: none; }
 
   /* subpage phone */
   .subpage-title{ font-size: 24px; }
+
+  /* 2. footnote prose uses the full width */
+  .content-prose .content-text.sub-prose{ max-width: 100%; }
+
+  /* 4. craft2 members: one per row */
+  .member-cards-grid{ grid-template-columns: 1fr; }
+
+  /* 5. timeline: tighter indents so cards fit the screen */
+  .timeline{
+    --timeline-children-offset: 28px;
+    --timeline-dot-to-card-gap: 14px;
+    --timeline-children-padding-bottom: 36px;
+  }
+  .timeline-card{ gap: 12px; }
+  .timeline-card-logo{ width: 48px; height: 48px; }
+
+  /* 7. about: buttons stacked, left-aligned */
+  .about-links-bar{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .about-tab-link{ flex: none; }
+
+  /* 9. footer: rights on its own line */
+  .site-footer .container{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* 3. research roadmap: filter chips on top + vertical tree (main trunk on the left,
+     each paper's lanes indented to the right with their own line, like the timeline subtree) */
+  .hgraph{
+    --hgraph-line-gap: 4px;
+    --hgraph-m-lane-x: 20px;     /* lane 右移距离 */
+    --hgraph-m-col-gap: 30px;    /* 上一组 sub 到下一个主 term 的距离（主干线随之变长） */
+    --hgraph-m-main-height: 30px;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+  .hgraph-grid{ display: block; width: auto; }
+  .hgraph-col{ display: block; position: relative; }
+  .hgraph-col.is-hidden{ display: none; }
+
+  .hgraph-col--fixed{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .hgraph-col--fixed .hgraph-node--main,
+  .hgraph-col--fixed .hgraph-dot{ display: none; }
+  .hgraph-col--fixed .hgraph-node,
+  .hgraph-col--fixed .hgraph-node:not(.hgraph-node--main){
+    position: static;
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+    background: none;
+  }
+  .hgraph .hgraph-col--fixed .hgraph-node::before,
+  .hgraph .hgraph-col--fixed .hgraph-node::after{ display: none; }
+  .hgraph .hgraph-col--fixed .hgraph-filter{ width: auto; margin: 0; }
+
+  /* main trunk: one line per paper column, through its main dot */
+  .hgraph-col:not(.hgraph-col--fixed){ padding-top: var(--hgraph-m-col-gap); }
+  .hgraph-col:not(.hgraph-col--fixed)::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--hgraph-dot-size) / 2 - var(--hgraph-line-width) / 2);
+    width: var(--hgraph-line-width);
+    background: var(--hgraph-line-color);
+  }
+  .hgraph-col.is-first::before{ top: calc(var(--hgraph-m-col-gap) + var(--hgraph-m-main-height) / 2); }
+  .hgraph-col.is-last::before{ bottom: auto; height: calc(var(--hgraph-m-col-gap) + var(--hgraph-m-main-height) / 2); }
+  .hgraph-col.is-first.is-last::before{ display: none; }
+
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node--main{
+    box-sizing: border-box;
+    height: var(--hgraph-m-main-height);
+    margin: 0;
+    padding: 0;
+    flex-direction: row;
+    align-items: center;
+  }
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node--main::before{ display: none; }
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node--main .hgraph-term{ margin: 0 0 0 14px; }
+
+  /* lanes: indented, connected to each other and up to the main row */
+  .hgraph .hgraph-col:not(.hgraph-col--fixed) .hgraph-node.is-empty{ display: none; }
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node:not(.hgraph-node--main){
+    --x: var(--hgraph-m-lane-x);
+    display: grid;
+    grid-template-columns: var(--hgraph-dot-size) 1fr;
+    column-gap: 14px;
+    align-items: center;
+    margin: 0;
+    padding: 8px 0 8px var(--x);
+  }
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node:not(.hgraph-node--main)::before,
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node:not(.hgraph-node--main)::after{
+    display: block;
+    height: 50%;
+  }
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node.is-head::before,
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node.is-tail::after{ display: none; }
+
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node:not(.hgraph-node--main) .hgraph-dot{ grid-column: 1; grid-row: 1 / span 2; }
+  .hgraph-lane-tag{
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #969696;
+    transition: opacity var(--anim-duration) var(--anim-ease);
+  }
+  .hgraph-node.is-dim .hgraph-lane-tag{ opacity: 0.25; }
+  .hgraph-col:not(.hgraph-col--fixed) .hgraph-node:not(.hgraph-node--main) > .hgraph-term{
+    grid-column: 2;
+    grid-row: 2;
+    display: block;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    font-size: 14px;
+  }
 }
 
 .figma-embed {

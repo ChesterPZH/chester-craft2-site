@@ -293,7 +293,7 @@ function initTimelinePopupCards() {
     const getCardByTrigger = (trigger) => {
       const targetId = trigger.getAttribute("data-popup-target");
       if (!targetId) return null;
-      return popupZone.querySelector(`#${targetId}`);
+      return document.getElementById(targetId);
     };
 
     const closeAll = () => {
@@ -322,11 +322,32 @@ function initTimelinePopupCards() {
       card.style.top = `${clampedTop}px`;
     };
 
+    // 窄屏：卡片直接盖在被点的那一行上（同 roadmap 卡片）；宽屏：放回右侧的 popup 区
+    const isNarrow = () => window.innerWidth <= 1100;
+    const mountCard = (trigger, card) => {
+      if (isNarrow()) {
+        if (card.parentElement !== timeline) timeline.appendChild(card);
+        card.classList.add("pop-up-card--overlay");
+        const box = timeline.getBoundingClientRect();
+        const row = trigger.getBoundingClientRect();
+        const width = Math.min(480, box.width);
+        card.style.width = `${width}px`;
+        card.style.left = `${Math.max(0, Math.min(row.left - box.left, box.width - width))}px`;
+        card.style.top = `${row.top - box.top}px`;
+      } else {
+        if (card.parentElement !== popupZone) popupZone.appendChild(card);
+        card.classList.remove("pop-up-card--overlay");
+        card.style.width = "";
+        card.style.left = "";
+      }
+    };
+
     // 点击打开（卡片保留 hover 动画）；再点同一个关闭，点另一个直接切换，点其他任意位置关闭
     const open = (trigger) => {
       const card = getCardByTrigger(trigger);
       if (!card) return;
       closeAll();
+      mountCard(trigger, card);
       placeCard(trigger, card);
       card.classList.add("is-open");
       trigger.setAttribute("aria-expanded", "true");
@@ -349,6 +370,7 @@ function initTimelinePopupCards() {
       if (!activeTrigger) return;
       const activeCard = getCardByTrigger(activeTrigger);
       if (!activeCard || !activeCard.classList.contains("is-open")) return;
+      mountCard(activeTrigger, activeCard);
       placeCard(activeTrigger, activeCard);
     });
   });
@@ -361,8 +383,9 @@ function buildHGraph() {
     const fixed = graph.querySelector(".hgraph-col--fixed");
     if (!fixed) return;
     const laneKeys = Array.from(fixed.querySelectorAll("[data-lane]")).map((el) => el.dataset.lane);
+    const laneNames = Array.from(fixed.querySelectorAll("[data-lane]")).map((el) => el.textContent.trim());
 
-    const makeNode = (termEl, main) => {
+    const makeNode = (termEl, main, tagText) => {
       const node = document.createElement("div");
       node.className = "hgraph-node" + (main ? " hgraph-node--main" : "");
       if (!termEl) {
@@ -375,7 +398,15 @@ function buildHGraph() {
       termEl.classList.remove("hgraph-title");
       termEl.classList.add("hgraph-term");
       if (termEl.dataset.popupImage) node.classList.add("has-popup");
+      if (main && termEl.querySelector("a[href]")) node.classList.add("has-link"); // linked title → solid dot
       node.append(dot, termEl);
+      if (tagText) {
+        // lane name above the text; only shown in the phone (vertical) layout
+        const tag = document.createElement("span");
+        tag.className = "hgraph-lane-tag";
+        tag.textContent = tagText;
+        node.appendChild(tag);
+      }
       return node;
     };
 
@@ -394,7 +425,10 @@ function buildHGraph() {
           btn.setAttribute("aria-pressed", "false");
         });
       }
-      const nodes = [makeNode(title, true), ...laneKeys.map((k) => makeNode(byLane[k] || null, false))];
+      const nodes = [
+        makeNode(title, true),
+        ...laneKeys.map((k, i) => makeNode(byLane[k] || null, false, col === fixed ? null : laneNames[i])),
+      ];
       col.replaceChildren(...nodes);
     });
 
@@ -418,6 +452,11 @@ function initHGraphLanes() {
   document.querySelectorAll(".hgraph-col").forEach((col) => {
     const lanes = Array.from(col.querySelectorAll(".hgraph-node:not(.hgraph-node--main)"));
     const filled = lanes.map((n, i) => (n.classList.contains("is-empty") ? -1 : i)).filter((i) => i >= 0);
+    if (filled.length) {
+      // phone layout: the lane line starts at the first lane dot and ends at the last one
+      lanes[filled[0]].classList.add("is-head");
+      lanes[filled[filled.length - 1]].classList.add("is-tail");
+    }
     if (filled.length < 2) return;
     const first = filled[0];
     const last = filled[filled.length - 1];
@@ -445,11 +484,12 @@ function initHGraphFilter() {
       const visible = papers.filter((col) => !selected.length || selected.every((i) => filledLanes(col).includes(i)));
       papers.forEach((col) => {
         col.classList.toggle("is-hidden", !visible.includes(col));
-        col.classList.remove("is-last");
+        col.classList.remove("is-last", "is-first");
         col.querySelector(".hgraph-year")?.remove();
       });
       fixed.classList.remove("is-last");
       (visible[visible.length - 1] || fixed).classList.add("is-last");
+      visible[0]?.classList.add("is-first");
 
       visible.forEach((col) => {
         const year = col.dataset.year;
@@ -608,7 +648,76 @@ function initHeroSlides() {
   show(0);
 }
 
+// Header: when the brand and the tabs don't fit on one row, collapse to the current tab with the
+// chevron on its left; the chevron opens a dropdown of the other pages. Header height stays the same.
+function initNavFit() {
+  const header = document.querySelector(".site-header");
+  const shell = header?.querySelector(".nav-shell");
+  const brand = header?.querySelector(".brand");
+  const list = header?.querySelector(".nav-list");
+  if (!shell || !brand || !list) return;
+  const nav = list.parentElement;
+
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "nav-fold-toggle";
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-label", "Show pages");
+  toggle.innerHTML = '<ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>';
+  nav.prepend(toggle);
+
+  const current = list.querySelector('a[aria-current="page"]');
+  let label = null;
+  if (!current) {
+    // pages without a current tab (project subpages) show a plain label next to the chevron
+    label = document.createElement("span");
+    label.className = "nav-fold-label";
+    label.textContent = "Menu";
+    toggle.after(label);
+  }
+
+  const dropdown = document.createElement("div");
+  dropdown.className = "nav-dropdown";
+  list.querySelectorAll("a").forEach((a) => {
+    if (a !== current) dropdown.appendChild(a.cloneNode(true));
+  });
+  header.appendChild(dropdown);
+
+  const setOpen = (open) => {
+    header.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  };
+  [toggle, label].forEach((el) =>
+    el?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setOpen(!header.classList.contains("is-open"));
+    })
+  );
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target)) setOpen(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+
+  const fit = () => {
+    const wasCompact = header.classList.contains("is-compact");
+    header.classList.remove("is-compact");
+    const cs = getComputedStyle(shell);
+    const available = shell.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const gap = parseFloat(cs.columnGap) || 0;
+    const needed = brand.getBoundingClientRect().width + gap + list.scrollWidth;
+    const compact = needed > available + 1;
+    header.classList.toggle("is-compact", compact);
+    if (!compact && wasCompact) setOpen(false);
+  };
+  fit();
+  document.fonts?.ready.then(fit);
+  window.addEventListener("resize", () => requestAnimationFrame(fit));
+}
+
 onReady(() => {
+  initNavFit();
   initHeroSlides();
   buildHGraph();
   initHGraphLanes();

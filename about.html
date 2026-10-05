@@ -26,16 +26,13 @@
 
     <main>
       <section class="about-intro" aria-label="About Intro">
-        <div class="container about-grid">
-          <div class="about-photo-wrap">
-            <img
-              class="about-photo"
-              src="./assets/about/photo.webp"
-              alt="Chester (Zhaohan) Pan"
-            />
-          </div>
+        <div class="container">
+          <div class="content-duo content-duo--keep-img" style="--content-direction: row; --content-gap: 40px; --content-img-align: center; --content-text-align: center; --content-img-size: 300px; --content-img-ratio: 1; --content-img-fit: cover; --content-img-radius: 50%;">
+            <div class="content-img-wrap">
+              <img class="content-img" src="./assets/about/photo.webp" alt="Chester (Zhaohan) Pan" />
+            </div>
 
-          <p class="about-text">
+            <p class="content-text">
             Chester (Zhaohan) Pan is a Human-Computer Interaction researcher, designer, and educator.
             He is currently a visiting researcher at the Southern University of Science and Technology (SUSTech) in Shenzhen, China, advised by Prof. Seungwoo Je.
             <br><br>
@@ -54,8 +51,10 @@
             
             Beyond the focus on spatial computing and wearable intelligence, Chester also has abundant experience in accessibility design, haptics, computational design-fabrication,
             3D printing, structural mechanics, and algorithmic modeling (optimization, decision-making, etc.).
-          </p>
+            </p>
+          </div>
 
+          <div class="about-foot">
           <div class="about-contact">
             <p class="about-contact-label">Contact:</p>
             <p class="about-contact-emails">
@@ -77,6 +76,7 @@
               <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
               Media
             </a>
+          </div>
           </div>
         </div>
 
@@ -171,7 +171,7 @@
                   <div class="timeline-card">
                     <img class="timeline-card-logo" src="./assets/logos/uw_logo.png" alt="" loading="lazy" />
                     <div class="timeline-card-body">
-                      <p class="timeline-card-title">B.S. in Civil Engineering, Magna cum laude</p>
+                      <p class="timeline-card-title">B.S. in Civil Engineering, magna cum laude</p>
                       <p class="timeline-card-meta">University of Washington · Sep 2020 - Mar 2023</p>
                     </div>
                   </div>
