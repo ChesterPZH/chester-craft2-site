@@ -602,6 +602,17 @@ function webpDurationMs(buf) {
 function initHeroSlides() {
   const slides = Array.from(document.querySelectorAll(".hero-slide"));
   if (!slides.length) return;
+  // container options: data-order="random" picks the next slide at random (never the same twice in a row);
+  // data-interval = seconds per still image (animated webps always play once in full)
+  const box = slides[0].closest(".hero-slides");
+  const random = box?.dataset.order === "random";
+  const intervalMs = (parseFloat(box?.dataset.interval) || 6) * 1000;
+  const pickNext = (i) => {
+    if (!random || slides.length < 2) return (i + 1) % slides.length;
+    let n;
+    do n = Math.floor(Math.random() * slides.length); while (n === i);
+    return n;
+  };
 
   // crossfade length comes from CSS (--hero-fade), centered on the boundary between two clips
   const fadeMs = () => {
@@ -615,7 +626,10 @@ function initHeroSlides() {
     if (!cache.has(src)) {
       cache.set(src, fetch(src)
         .then((r) => r.blob())
-        .then(async (blob) => ({ blob, ms: webpDurationMs(await blob.arrayBuffer()) })));
+        .then(async (blob) => ({
+          blob,
+          ms: blob.type === "image/webp" ? webpDurationMs(await blob.arrayBuffer()) : 0,
+        })));
     }
     return cache.get(src);
   };
@@ -639,13 +653,13 @@ function initHeroSlides() {
     try { await Promise.race([img.decode(), new Promise((r) => setTimeout(r, 1000))]); } catch (e) {}
     slides.forEach((s) => s.classList.toggle("is-active", s === img));
 
-    const next = (i + 1) % slides.length;
+    const next = pickNext(i);
     load(slides[next].dataset.src).catch(() => {}); // preload
     // start the next clip half a fade early: each clip gives up half of the crossfade
-    setTimeout(() => show(next), Math.max((ms || 6000) - fadeMs() / 2, 0));
+    setTimeout(() => show(next), Math.max((ms || intervalMs) - fadeMs() / 2, 0));
   };
 
-  show(0);
+  show(random ? Math.floor(Math.random() * slides.length) : 0);
 }
 
 // Header: when the brand and the tabs don't fit on one row, collapse to the current tab with the

@@ -26,16 +26,19 @@
 
     <main>
       <section class="hero" aria-label="Intro">
-        <video
-          class="hero-video"
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-        >
-        </video>
-        <div class="hero-overlay" aria-hidden="true"></div>
+        <!-- 随机轮播 gallery 图片：在下面增删 <img> 即可；data-interval = 每张停留秒数 -->
+        <div class="hero-slides" data-order="random" data-interval="7" aria-hidden="true" style="filter: brightness(0.5) saturate(0.9);">
+          <img class="hero-slide" data-src="./assets/gallery/stf-1-2025.jpg" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/stf-2-2024.png" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/yasb-2024.jpg" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/ky-2025.jpg" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/jd-2025.jpg" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/mc-1-2020.PNG" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/mc-2-2020.PNG" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/seattle-1-2022.png" alt="" />
+          <img class="hero-slide" data-src="./assets/gallery/seattle-2-2023.png" alt="" />
+        </div>
+        <!-- <div class="hero-overlay" aria-hidden="true"></div> -->
         <div class="container hero-content">
           <p class="hero-text">
             A gallery of <strong>visual designs · photographs · event moments · personal collections · maker creations</strong>, as life stamps that unfold along spacetime, beyond the rigorous academia.
@@ -74,77 +77,98 @@
               
               <div class="gallery-grid">
                 <article class="gallery-item" data-category="visual" data-contributor="personal">
-                  <img class="gallery-image" src="./assets/gallery/mc1.PNG" alt="Minecraft Work: &quot;亭台叠嶂，楼宇琳琅&quot;" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/mc-1-2020.PNG" alt="Minecraft Work: &quot;亭台叠嶂，楼宇琳琅&quot;" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Minecraft Work: "亭台叠嶂，楼宇琳琅"</p>
                     <p class="member-card-affiliation">Chester · 2020</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="visual" data-contributor="personal">
-                  <img class="gallery-image" src="./assets/gallery/mc2.PNG" alt="Minecraft Work: &quot;亭台叠嶂，楼宇琳琅&quot;" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/mc-2-2020.PNG" alt="Minecraft Work: &quot;亭台叠嶂，楼宇琳琅&quot;" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Minecraft Work: "亭台叠嶂，楼宇琳琅"</p>
                     <p class="member-card-affiliation">Chester · 2020</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="events" data-contributor="personal">
-                  <img class="gallery-image" src="./assets/gallery/yasb2024.jpg" alt="Yoasobi @ San Francisco 2024" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/yasb-2024.jpg" alt="Yoasobi @ San Francisco 2024" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Yoasobi @ San Francisco 2024</p>
                     <p class="member-card-affiliation">Chester · 2024</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="visual" data-contributor="craft2">
-                  <img class="gallery-image" src="./assets/gallery/edd1.JPG" alt="&quot;CRAFT^2&quot; Promo" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/edd-1-2024.JPG" alt="&quot;CRAFT^2&quot; Promo" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">"CRAFT^2" Promo</p>
                     <p class="member-card-affiliation">Lushan · 2024</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="visual" data-contributor="craft2">
-                  <img class="gallery-image" src="./assets/gallery/edd2.JPG" alt="&quot;Engineering Discovery Day&quot; Promo" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/edd-2-2024.JPG" alt="&quot;Engineering Discovery Day&quot; Promo" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">"Engineering Discovery Day" Promo</p>
                     <p class="member-card-affiliation">Lushan · 2024</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="visual" data-contributor="craft2">
-                  <img class="gallery-image" src="./assets/gallery/edd3.JPG" alt="&quot;Jump &amp; Adventure&quot; Promo" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/edd-3-2024.JPG" alt="&quot;Jump &amp; Adventure&quot; Promo" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">"Jump & Adventure" Promo</p>
                     <p class="member-card-affiliation">Lushan · 2024</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="events" data-contributor="personal">
-                  <img class="gallery-image" src="./assets/gallery/ky1-2025.jpg" alt="Kenshi Yonezu JUNK Tour @ LA 2025" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/ky-2025.jpg" alt="Kenshi Yonezu JUNK Tour @ LA 2025" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Kenshi Yonezu JUNK Tour @ LA 2025</p>
                     <p class="member-card-affiliation">Chester · 2025</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="visual" data-contributor="craft2">
-                  <img class="gallery-image" src="./assets/gallery/tcapp.png" alt="Tangible Compass App Icon" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/tcapp-2025.png" alt="Tangible Compass App Icon" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Tangible Compass App Icon</p>
                     <p class="member-card-affiliation">Lilian · 2025</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="photo" data-contributor="personal">
-                  <img class="gallery-image" src="./assets/gallery/stf2025.jpg" alt="Stanford Memorial Church" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/stf-1-2025.jpg" alt="Stanford Memorial Church" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Stanford Memorial Church</p>
                     <p class="member-card-affiliation">Chester · 2025</p>
                   </div>
                 </article>
+                <article class="gallery-item" data-category="photo" data-contributor="personal">
+                  <img class="gallery-image" src="./assets/gallery/seattle-1-2022.png" alt="Seattle" loading="lazy" />
+                  <div class="gallery-caption">
+                    <p class="member-card-role">Seattle</p>
+                    <p class="member-card-affiliation">Chester · 2022</p>
+                  </div>
+                </article>
+                <article class="gallery-item" data-category="photo" data-contributor="personal">
+                  <img class="gallery-image" src="./assets/gallery/seattle-2-2023.png" alt="Seattle" loading="lazy" />
+                  <div class="gallery-caption">
+                    <p class="member-card-role">Seattle</p>
+                    <p class="member-card-affiliation">Chester · 2023</p>
+                  </div>
+                </article>
+                <article class="gallery-item" data-category="photo" data-contributor="personal">
+                  <img class="gallery-image" src="./assets/gallery/stf-2-2024.png" alt="Stanford" loading="lazy" />
+                  <div class="gallery-caption">
+                    <p class="member-card-role">Stanford</p>
+                    <p class="member-card-affiliation">Chester · 2024</p>
+                  </div>
+                </article>
                 <article class="gallery-item" data-category="events" data-contributor="personal">
-                  <img class="gallery-image" src="./assets/gallery/jd2025.jpg" alt="Jane Doe @ Cinema" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/jd-2025.jpg" alt="Jane Doe @ Cinema" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">Jane Doe @ Cinema</p>
                     <p class="member-card-affiliation">Chester · 2025</p>
                   </div>
                 </article>
                 <article class="gallery-item" data-category="visual" data-contributor="craft2">
-                  <img class="gallery-image" src="./assets/gallery/fcc24.jpg" alt="FCC SZ &#x27;24 Poster" loading="lazy" />
+                  <img class="gallery-image" src="./assets/gallery/tcposter-2024.jpg" alt="FCC SZ &#x27;24 Poster" loading="lazy" />
                   <div class="gallery-caption">
                     <p class="member-card-role">FCC SZ '24 Poster</p>
                     <p class="member-card-affiliation">Lushan · Lilian · 2024</p>
