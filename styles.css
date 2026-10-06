@@ -280,13 +280,13 @@ a{ color: inherit; text-decoration: none; }
 .nav-fold-label,
 .nav-dropdown{ display: none; }
 
+.site-header.is-compact .nav-shell{ gap: 12px; }
 .site-header.is-compact nav{
   display: flex;
   flex: 0 0 auto;
   align-items: center;
 }
-/* very narrow screens: the brand may wrap so the current tab never gets cut */
-.site-header.is-compact .brand{ white-space: normal; min-width: 0; line-height: 1.15; }
+/* very narrow screens: the brand stays on one line; JS shrinks its font until it fits */
 .site-header.is-compact .nav-fold-toggle{
   display: inline-flex;
   align-items: center;

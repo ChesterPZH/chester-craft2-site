@@ -703,6 +703,7 @@ function initNavFit() {
   const fit = () => {
     const wasCompact = header.classList.contains("is-compact");
     header.classList.remove("is-compact");
+    brand.style.fontSize = ""; // measure at the normal size
     const cs = getComputedStyle(shell);
     const available = shell.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     const gap = parseFloat(cs.columnGap) || 0;
@@ -710,6 +711,17 @@ function initNavFit() {
     const compact = needed > available + 1;
     header.classList.toggle("is-compact", compact);
     if (!compact && wasCompact) setOpen(false);
+
+    // compact and still too tight: shrink the brand (one line, never wraps) until everything fits
+    if (compact) {
+      const compactGap = parseFloat(getComputedStyle(shell).columnGap) || 0;
+      const room = () => available - compactGap - nav.getBoundingClientRect().width;
+      let size = parseFloat(getComputedStyle(brand).fontSize);
+      while (brand.scrollWidth > room() && size > 12) {
+        size -= 0.5;
+        brand.style.fontSize = `${size}px`;
+      }
+    }
   };
   fit();
   document.fonts?.ready.then(fit);
